@@ -40,17 +40,13 @@ load_env_file()
 
 def send_email_notification(record: dict) -> bool:
     """
-    Sends an email to the admin via Gmail SMTP.
-    Requires GMAIL_SENDER_EMAIL, GMAIL_APP_PASSWORD, ADMIN_EMAIL in .env
+    Sends an email notification to the admin.
+    Supports 3 methods in order of preference:
+    1. Resend API (HTTP Port 443 - Recommended for Render free tier)
+    2. Web3Forms API (HTTP Port 443 - Free transactional form forwarder)
+    3. Gmail SMTP (Port 587 - Works on localhost or paid hosts, blocked on Render free tier)
     """
-    sender = os.environ.get("GMAIL_SENDER_EMAIL", "").strip()
-    password = os.environ.get("GMAIL_APP_PASSWORD", "").strip().replace(" ", "")  # Google shows App Password with spaces, SMTP needs it without
-    recipient = os.environ.get("ADMIN_EMAIL", "kreomax9@gmail.com").strip()
-
-    if not sender or not password:
-        print("[Email Notify] Skipped: GMAIL_SENDER_EMAIL or GMAIL_APP_PASSWORD not set in .env")
-        return False
-
+    admin_recipient = os.environ.get("ADMIN_EMAIL", "kreomax9@gmail.com").strip()
     subject = f"🎓 New Kreomax Lead: {record['studentName']} – {record['planName']}"
 
     html_body = f"""
@@ -73,23 +69,83 @@ def send_email_notification(record: dict) -> bool:
     </body></html>
     """
 
+    # ── Method 1: Resend HTTP API (Port 443 - Never blocked) ────────────────
+    resend_key = os.environ.get("RESEND_API_KEY", "").strip()
+    if resend_key:
+        try:
+            req_data = json.dumps({
+                "from": "Kreomax Leads <onboarding@resend.dev>",
+                "to": [admin_recipient],
+                "subject": subject,
+                "html": html_body
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.resend.com/emails",
+                data=req_data,
+                headers={
+                    "Authorization": f"Bearer {resend_key}",
+                    "Content-Type": "application/json"
+                }
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                if resp.status in (200, 201):
+                    print(f"[Email Notify: Resend] Successfully delivered to {admin_recipient}")
+                    return True
+        except Exception as e:
+            print(f"[Email Notify Error - Resend]: {e}")
+
+    # ── Method 2: Web3Forms HTTP API (Port 443 - Zero-setup form mailer) ─────
+    web3_key = os.environ.get("WEB3FORMS_ACCESS_KEY", "").strip()
+    if web3_key:
+        try:
+            w3_data = json.dumps({
+                "access_key": web3_key,
+                "subject": subject,
+                "from_name": "Kreomax Admissions",
+                "Student Name": record['studentName'],
+                "Phone": record['studentPhone'],
+                "Email": record.get('studentEmail') or 'Not provided',
+                "Grade": record.get('studentGrade', 'N/A'),
+                "Plan": record['planName'],
+                "Application ID": record['applicationId']
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.web3forms.com/submit",
+                data=w3_data,
+                headers={"Content-Type": "application/json"}
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                if resp.status == 200:
+                    print(f"[Email Notify: Web3Forms] Successfully delivered to {admin_recipient}")
+                    return True
+        except Exception as e:
+            print(f"[Email Notify Error - Web3Forms]: {e}")
+
+    # ── Method 3: Gmail SMTP (Direct socket connection) ─────────────────────
+    sender = os.environ.get("GMAIL_SENDER_EMAIL", "").strip()
+    password = os.environ.get("GMAIL_APP_PASSWORD", "").strip().replace(" ", "")
+
+    if not sender or not password:
+        print("[Email Notify] Skipped: No email service credentials configured (RESEND_API_KEY, WEB3FORMS_ACCESS_KEY, or GMAIL_APP_PASSWORD).")
+        return False
+
     try:
         msg = MIMEMultipart("alternative")
         msg["Subject"] = subject
         msg["From"] = sender
-        msg["To"] = recipient
+        msg["To"] = admin_recipient
         msg.attach(MIMEText(html_body, "html"))
 
         with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
             server.ehlo()
             server.starttls()
             server.login(sender, password)
-            server.sendmail(sender, recipient, msg.as_string())
+            server.sendmail(sender, admin_recipient, msg.as_string())
 
-        print(f"[Email Notify] Email sent to {recipient}")
+        print(f"[Email Notify: SMTP] Email sent to {admin_recipient}")
         return True
     except Exception as e:
-        print(f"[Email Notify Error]: {e}")
+        print(f"[Email Notify Error - SMTP]: {e}")
         return False
 
 # Master Multi-Tool Gateway Keys (Managed by LMS, zero student logins needed)
@@ -950,6 +1006,28 @@ async def list_admission_applications():
         "status": "success",
         "count": len(ADMISSION_APPLICATIONS),
         "applications": ADMISSION_APPLICATIONS
+    }
+
+@app.get("/api/admissions/test-email")
+async def test_email_delivery():
+    """Diagnostic endpoint to test email delivery."""
+    test_record = {
+        "applicationId": "TEST-" + str(int(time.time()))[-4:],
+        "planName": "Creator Cohort (Diagnostic Test)",
+        "studentName": "Live Diagnostic Test",
+        "studentEmail": "test@kreomax.ai",
+        "studentPhone": "9999999999",
+        "studentGrade": "Grade 8"
+    }
+    success = send_email_notification(test_record)
+    return {
+        "emailSent": success,
+        "configuredProviders": {
+            "resend": bool(os.environ.get("RESEND_API_KEY")),
+            "web3forms": bool(os.environ.get("WEB3FORMS_ACCESS_KEY")),
+            "gmail_smtp": bool(os.environ.get("GMAIL_SENDER_EMAIL") and os.environ.get("GMAIL_APP_PASSWORD"))
+        },
+        "recipient": os.environ.get("ADMIN_EMAIL", "kreomax9@gmail.com")
     }
 
 class CreateOrderRequest(BaseModel):
