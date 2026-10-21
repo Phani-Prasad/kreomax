@@ -1,0 +1,689 @@
+/* ═══════════════════════════════════════════════════════════════
+   Razorpay Payment & Pathway Modal — Kreomax Creator Studio
+   ═══════════════════════════════════════════════════════════════ */
+
+.km-pay-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(4, 3, 10, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+  animation: km-fade-in 0.25s ease-out;
+}
+
+@keyframes km-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.km-pay-modal {
+  position: relative;
+  width: 100%;
+  max-width: 920px;
+  background: #0B0916;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 2.2rem;
+  box-shadow: 
+    0 30px 100px rgba(0, 0, 0, 0.8),
+    0 0 80px rgba(124, 58, 237, 0.15);
+  max-height: 94vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.km-pay-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94A3B8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10;
+}
+.km-pay-close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* Header */
+.km-pay-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.km-pay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+}
+
+.km-pay-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-weight: 900;
+  color: #F1F5F9;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.km-pay-subtitle {
+  font-size: 0.95rem;
+  color: #94A3B8;
+  max-width: 620px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.km-pay-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #FCA5A5;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+/* Plan Cards Grid */
+.km-pay-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.km-pay-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 1.6rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.km-pay-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.km-pay-card--selected {
+  background: rgba(124, 58, 237, 0.07);
+  border-color: var(--plan-accent, #7C3AED);
+  box-shadow: 
+    0 0 0 1px var(--plan-accent, #7C3AED),
+    0 20px 50px rgba(124, 58, 237, 0.25);
+  transform: translateY(-2px);
+}
+
+.km-pay-card--popular {
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+.km-pay-card-pop-tag {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #7C3AED, #4F46E5);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+  white-space: nowrap;
+}
+
+.km-pay-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.km-pay-card-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--plan-accent, #7C3AED);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.km-pay-card-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #F1F5F9;
+  letter-spacing: -0.01em;
+}
+
+.km-pay-card-duration {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--plan-accent, #a78bfa);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 2px;
+}
+
+.km-pay-card-schedule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #94A3B8;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Pricing block */
+.km-pay-card-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding-bottom: 0.85rem;
+}
+
+.km-price-val {
+  display: flex;
+  align-items: baseline;
+  color: #FFFFFF;
+}
+
+.km-currency {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-right: 2px;
+  color: #a78bfa;
+}
+
+.km-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.km-price-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.km-orig-price {
+  font-size: 0.8rem;
+  color: #64748B;
+  text-decoration: line-through;
+}
+
+.km-discount-pill {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #34D399;
+  background: rgba(52, 211, 153, 0.12);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.km-pay-card-desc {
+  font-size: 0.82rem;
+  color: #94A3B8;
+  line-height: 1.45;
+  margin: 0;
+  min-height: 38px;
+}
+
+.km-pay-deliverables-pill {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #E2E8F0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.4rem 0.65rem;
+  border-radius: 8px;
+}
+
+.km-pay-card-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.km-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.78rem;
+  color: #CBD5E1;
+  line-height: 1.4;
+}
+
+.km-feature-check {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: rgba(52, 211, 153, 0.15);
+  color: #34D399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.km-pay-card-select-indicator {
+  margin-top: auto;
+  text-align: center;
+  padding-top: 0.5rem;
+}
+
+.km-selected-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--plan-accent, #a78bfa);
+}
+
+.km-unselected-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+/* Pre-Registration form & actions */
+.km-pay-checkout-section {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.km-pay-inputs-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.1fr 1.2fr 1fr;
+  gap: 0.85rem;
+}
+
+.km-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.km-input-group label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94A3B8;
+  letter-spacing: 0.02em;
+}
+
+.km-input-group input,
+.km-select {
+  background: rgba(15, 14, 25, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: #F1F5F9;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.km-select {
+  cursor: pointer;
+}
+
+.km-select option {
+  background: #110e20;
+  color: #F1F5F9;
+}
+
+.km-input-group input::placeholder {
+  color: #64748B;
+  opacity: 1;
+}
+
+.km-input-group input::-webkit-input-placeholder {
+  color: #64748B;
+}
+
+.km-input-group input:-webkit-autofill,
+.km-input-group input:-webkit-autofill:hover, 
+.km-input-group input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #F1F5F9;
+  -webkit-box-shadow: 0 0 0px 1000px #0F0E19 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.km-input-group input:focus,
+.km-select:focus {
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+}
+
+/* Action bar */
+.km-pay-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.km-pay-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.km-summary-label {
+  font-size: 0.82rem;
+  color: #94A3B8;
+}
+
+.km-summary-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #F1F5F9;
+}
+
+.km-summary-price {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #a78bfa;
+}
+
+.km-pay-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.km-pay-wa-btn {
+  background: rgba(37, 211, 102, 0.1);
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  color: #25D366;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.78rem 1.25rem;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.km-pay-wa-btn:hover {
+  background: #25D366;
+  color: #062b10;
+  border-color: #25D366;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+}
+
+.km-pay-checkout-btn {
+  background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.8rem 1.6rem;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+  transition: all 0.2s;
+}
+.km-pay-checkout-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.55);
+}
+.km-pay-checkout-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.km-spinner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Trust badges */
+.km-pay-trust-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.74rem;
+  color: #94A3B8;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.km-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Success View for Pre-Registration */
+.km-pay-success {
+  text-align: center;
+  padding: 2.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.km-pay-success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10B981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.35);
+}
+
+.km-app-id-pill {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.km-pay-success-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.km-pay-success-sub {
+  font-size: 0.95rem;
+  color: #CBD5E1;
+  max-width: 540px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.km-pay-notice-card {
+  width: 100%;
+  max-width: 560px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 1.1rem 1.3rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  text-align: left;
+}
+
+.km-notice-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.km-notice-content strong {
+  display: block;
+  font-size: 0.88rem;
+  color: #F1F5F9;
+  margin-bottom: 0.3rem;
+}
+
+.km-notice-content p {
+  font-size: 0.82rem;
+  color: #94A3B8;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.km-success-action-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 560px;
+}
+
+.km-wa-direct-btn {
+  background: #25D366;
+  color: #062b10;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 800;
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+  transition: all 0.2s;
+}
+.km-wa-direct-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.5);
+  filter: brightness(1.05);
+}
+
+
+.km-done-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #E2E8F0;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.85rem 1.4rem;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s;
+}
+.km-done-close-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .km-pay-plans-grid {
+    grid-template-columns: 1fr;
+  }
+  .km-pay-inputs-row {
+    grid-template-columns: 1fr;
+  }
+  .km-pay-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .km-pay-btn-group {
+    flex-direction: column;
+  }
+  .km-pay-wa-btn,
+  .km-pay-checkout-btn,
+  .km-wa-direct-btn,
+  .km-demo-enter-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

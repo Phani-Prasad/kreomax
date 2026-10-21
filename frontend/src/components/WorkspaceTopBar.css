@@ -1,0 +1,285 @@
+/* ─────────────────────────────────────────────────────────────────
+   Workspace TopBar — Clean Educational Light Theme
+   Cognitive Academy — AI Creator Suite
+   ───────────────────────────────────────────────────────────────── */
+
+.ca-workspace-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1.25rem;
+  border-radius: 14px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  gap: 12px;
+}
+
+.ca-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ca-topbar-mobile-btn {
+  display: none;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  color: #0F172A;
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+/* Breadcrumbs */
+.ca-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ca-breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: #475569;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 5px;
+  transition: all 0.15s ease;
+}
+
+.ca-bc-home:hover {
+  color: #4F46E5;
+}
+
+.ca-bc-level {
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.ca-bc-active {
+  color: #0F172A;
+  font-weight: 700;
+  cursor: default;
+}
+
+.ca-bc-arrow {
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+
+/* Center: Mission Theme Pill */
+.ca-topbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ca-mission-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 20px;
+  padding: 6px 14px;
+  transition: all 0.2s ease;
+}
+
+.ca-mission-chip-btn {
+  cursor: pointer;
+}
+
+.ca-mission-chip-btn:hover {
+  background: #E2E8F0;
+  border-color: #94A3B8;
+  transform: translateY(-1px);
+}
+
+.ca-mission-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #D97706;
+  letter-spacing: 0.05em;
+}
+
+.ca-mission-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-edit-theme-icon {
+  color: #64748B;
+  margin-left: 2px;
+}
+
+/* Right: Action Buttons */
+.ca-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ca-topbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 7px 13px;
+  border-radius: 9px;
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.ca-topbar-btn:hover {
+  background: #F1F5F9;
+  border-color: #94A3B8;
+  color: #0F172A;
+}
+
+.ca-btn-nav-primary {
+  border: none;
+  background: #4F46E5 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+}
+.ca-btn-nav-primary:hover {
+  background: #4338CA !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  filter: brightness(1.05);
+}
+
+.ca-btn-roadmap {
+  background: #EEF2FF;
+  border-color: #C7D2FE;
+  color: #4338CA;
+}
+.ca-btn-roadmap:hover {
+  background: #E0E7FF;
+  color: #3730A3;
+}
+
+.ca-btn-landing {
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+  color: #475569;
+}
+.ca-btn-landing:hover {
+  background: #EEF2FF;
+  border-color: #C7D2FE;
+  color: #4338CA;
+}
+
+/* Trainer Mentor Guide Button */
+.ca-btn-trainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #EEF2FF !important;
+  border: 1px solid #C7D2FE !important;
+  color: #4338CA !important;
+  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.08);
+}
+
+.ca-btn-trainer:hover {
+  background: #E0E7FF !important;
+  border-color: #A5B4FC !important;
+}
+
+.ca-trainer-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 4px #10B981;
+  animation: pulseGreen 1.8s infinite;
+}
+
+@keyframes pulseGreen {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+/* AI Hub Status Pill */
+.ca-topbar-ai-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 9px;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ca-topbar-ai-pill:hover {
+  background: #F1F5F9;
+  border-color: #94A3B8;
+}
+
+.ca-topbar-ai-pill.connected {
+  border-color: #A7F3D0;
+  background: #ECFDF5;
+}
+
+.ca-topbar-ai-text {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* User Profile Mini Avatar */
+.ca-topbar-user {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.ca-topbar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #CBD5E1;
+  transition: border-color 0.15s ease;
+}
+
+.ca-topbar-avatar:hover {
+  border-color: #4F46E5;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ca-topbar-mobile-btn {
+    display: flex;
+  }
+  .ca-topbar-center {
+    display: none;
+  }
+  .hide-mobile {
+    display: none;
+  }
+}

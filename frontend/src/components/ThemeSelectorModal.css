@@ -1,0 +1,294 @@
+/* Project Theme & Story World Customizer Modal */
+.ca-theme-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.ca-theme-modal-card {
+  width: 100%;
+  max-width: 680px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.ca-theme-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.ca-theme-modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ca-theme-header-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #EEF2FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ca-theme-modal-title {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 2px 0;
+}
+
+.ca-theme-modal-sub {
+  font-size: 0.8125rem;
+  color: #475569;
+  margin: 0;
+}
+
+.ca-theme-close-btn {
+  background: transparent;
+  border: none;
+  color: #64748B;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+.ca-theme-close-btn:hover {
+  background: #F1F5F9;
+  color: #0F172A;
+}
+
+/* Active Theme Banner */
+.ca-current-theme-banner {
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+
+.ca-banner-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #64748B;
+}
+
+.ca-banner-title-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.ca-banner-title-text {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0F172A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ca-banner-type-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+
+.ca-banner-type-badge.custom {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.ca-banner-type-badge.example {
+  background: #EEF2FF;
+  color: #4F46E5;
+  border: 1px solid #C7D2FE;
+}
+
+/* Section */
+.ca-theme-section {
+  margin-bottom: 20px;
+}
+
+.ca-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 10px;
+}
+
+/* Custom Input */
+.ca-custom-input-wrap {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ca-custom-theme-input {
+  flex: 1;
+  padding: 9px 14px;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  color: #0F172A;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.ca-custom-theme-input:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.ca-apply-btn {
+  padding: 9px 16px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* Inspiration Pills */
+.ca-inspiration-box {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.ca-insp-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #92400E;
+  margin-bottom: 6px;
+}
+
+.ca-insp-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ca-insp-pill {
+  padding: 3px 9px;
+  background: #FFFFFF;
+  border: 1px solid #FCD34D;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #78350F;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.ca-insp-pill:hover {
+  background: #FEF3C7;
+  color: #451A03;
+  transform: translateY(-1px);
+}
+
+/* Example Templates 2x2 Grid */
+.ca-examples-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.ca-example-card {
+  padding: 12px 14px;
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.ca-example-card:hover {
+  background: #F1F5F9;
+  border-color: #94A3B8;
+  transform: translateY(-1px);
+}
+
+.ca-example-card.selected {
+  background: #EEF2FF;
+  border-color: #A5B4FC;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.ca-example-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.ca-example-icon-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ca-example-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.ca-selected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4F46E5;
+}
+
+.ca-example-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 4px 0;
+}
+
+.ca-example-desc {
+  font-size: 0.75rem;
+  color: #475569;
+  line-height: 1.4;
+  margin: 0;
+}

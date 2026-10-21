@@ -1,0 +1,302 @@
+.ca-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+}
+
+.ca-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.ca-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ca-logo-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366F1, #EC4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+}
+
+.ca-sparkle-spin {
+  transition: transform 0.4s ease;
+}
+.ca-logo:hover .ca-sparkle-spin {
+  transform: rotate(45deg) scale(1.1);
+}
+
+.ca-logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ca-brand-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+.ca-brand-accent {
+  background: linear-gradient(135deg, #818CF8, #F472B6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: 2px;
+}
+
+.ca-brand-sub {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-cyan);
+}
+
+.ca-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+.ca-nav-separator {
+  width: 1px;
+  height: 20px;
+  background: var(--border-subtle);
+  margin: 0 4px;
+}
+
+.ca-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.ca-nav-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ca-nav-btn.active {
+  color: #FFFFFF;
+  background: rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
+}
+
+.ca-nav-btn-highlight.active {
+  background: rgba(6, 182, 212, 0.25);
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+}
+
+.text-blue { color: #60A5FA; }
+.text-emerald { color: #34D399; }
+.text-purple { color: #C084FC; }
+.text-pink { color: #F472B6; }
+.text-amber { color: #FBBF24; }
+.text-cyan { color: #22D3EE; }
+
+.ca-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Progress bar pill */
+.ca-progress-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px 14px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  min-width: 175px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.ca-progress-pill:hover {
+  border-color: var(--border-bright);
+}
+
+.ca-progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+}
+.ca-progress-label {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.ca-progress-val {
+  color: var(--accent-cyan);
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.ca-progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.ca-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366F1, #06B6D4);
+  border-radius: 6px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+}
+
+/* User SSO pill */
+.ca-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.ca-user-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-bright);
+}
+
+.ca-user-avatar-wrap {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+.ca-user-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.ca-role-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: #10B981;
+  border: 2px solid var(--bg-dark);
+  border-radius: 50%;
+}
+
+.ca-user-details {
+  display: flex;
+  flex-direction: column;
+}
+.ca-user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.ca-user-role {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  color: var(--accent-emerald);
+  font-weight: 600;
+}
+
+/* Gemini API Status Pill */
+.ca-gemini-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  text-align: left;
+}
+
+.ca-gemini-pill:hover {
+  border-color: var(--border-bright);
+  transform: translateY(-1px);
+}
+
+.ca-gemini-pill.connected {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.ca-gemini-pill.unconfigured {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.ca-gemini-pill-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ca-gemini-lbl {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ca-gemini-status {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ca-gemini-pill.connected .ca-gemini-status {
+  color: #34D399;
+}
+
+.ca-gemini-pill.unconfigured .ca-gemini-status {
+  color: #FBBF24;
+}
+

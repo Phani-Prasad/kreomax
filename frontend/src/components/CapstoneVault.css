@@ -1,0 +1,340 @@
+.ca-vault-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 36px 24px 80px 24px;
+}
+
+.ca-vault-header {
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.ca-vault-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ca-vault-title {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: #0F172A;
+}
+
+.ca-vault-desc {
+  color: #475569;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  max-width: 900px;
+  margin-bottom: 20px;
+}
+
+/* Pipeline Flow Bar */
+.ca-pipeline-flow-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 16px 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ca-pipe-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.ca-pipe-tool {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-pipe-deliverable {
+  font-size: 0.72rem;
+  color: #64748B;
+}
+
+.ca-pipe-arrow {
+  color: #94A3B8;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Vault Grid */
+.ca-vault-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+}
+
+.ca-asset-shelf {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.ca-shelf-hdr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #E2E8F0;
+}
+.ca-shelf-hdr h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-vault-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ca-vault-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  transition: all 0.2s ease;
+}
+.ca-vault-card:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+}
+
+.ca-vault-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bg-blue { background: #EEF2FF; color: #4F46E5; }
+.bg-emerald { background: #ECFDF5; color: #059669; }
+.bg-purple { background: #F5F3FF; color: #7C3AED; }
+.bg-pink { background: #FDF2F8; color: #DB2777; }
+.bg-amber { background: #FFFBEB; color: #D97706; }
+
+.ca-vault-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.ca-vault-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-vault-meta {
+  font-size: 0.74rem;
+  color: #64748B;
+}
+
+/* Rubric Panel */
+.ca-rubric-panel {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.ca-rubric-hdr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #E2E8F0;
+}
+.ca-rubric-hdr h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-rubric-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.ca-rubric-item {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.ca-rubric-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.ca-rubric-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-rubric-desc {
+  font-size: 0.76rem;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.ca-rubric-total {
+  margin-top: auto;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+/* Certificate Modal */
+.ca-cert-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ca-cert-card {
+  max-width: 680px;
+  width: 100%;
+  background: #0B0E17;
+  border-radius: 20px;
+  padding: 12px;
+  box-shadow: 0 0 60px rgba(6, 182, 212, 0.3);
+}
+
+.ca-cert-border {
+  border: 2px solid rgba(6, 182, 212, 0.4);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  background: radial-gradient(circle at 50% 20%, rgba(6, 182, 212, 0.08), transparent 70%);
+}
+
+.ca-cert-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+}
+
+.ca-cert-sub {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--accent-cyan);
+}
+
+.ca-cert-student {
+  font-size: 2rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 14px 0;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-cyan);
+}
+
+.ca-cert-body {
+  font-size: 0.88rem;
+  color: #CBD5E1;
+  line-height: 1.6;
+}
+
+.ca-cert-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 14px 0 16px 0;
+}
+
+.ca-cert-badge-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 99px;
+  color: #F8FAFC;
+}
+
+.ca-cert-project-box {
+  margin: 10px auto 20px auto;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  display: inline-block;
+  font-size: 0.82rem;
+  color: var(--accent-cyan);
+}
+
+.ca-cert-signatures {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ca-sig-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.ca-sig-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.ca-sig-role {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.ca-cert-actions {
+  margin-top: 28px;
+}

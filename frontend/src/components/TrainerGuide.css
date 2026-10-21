@@ -1,0 +1,488 @@
+/* ─────────────────────────────────────────────────────────────────
+   Trainer Guide & Mentor Assistant Panel — Clean Educational Light
+   Cognitive Academy — AI Creator Suite
+   ───────────────────────────────────────────────────────────────── */
+
+.ca-trainer-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.ca-trainer-drawer {
+  width: 100%;
+  max-width: 480px;
+  height: 100%;
+  background: #FFFFFF;
+  border-left: 1px solid #E2E8F0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 35px rgba(15, 23, 42, 0.12);
+  animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Header */
+.ca-trainer-header {
+  padding: 16px 20px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ca-trainer-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ca-trainer-avatar-wrap {
+  position: relative;
+  width: 46px;
+  height: 46px;
+}
+
+.ca-trainer-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4F46E5;
+}
+
+.ca-trainer-status-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 2px solid #FFFFFF;
+}
+
+.ca-trainer-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.ca-trainer-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ca-trainer-name-row h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-trainer-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #EEF2FF;
+  color: #4338CA;
+  border: 1px solid #C7D2FE;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.ca-trainer-sub {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.ca-trainer-close-btn {
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  color: #64748B;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ca-trainer-close-btn:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+/* Level Strip */
+.ca-trainer-level-strip {
+  padding: 10px 20px;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ca-trainer-level-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.ca-trainer-mission-pill {
+  font-size: 11px;
+  font-weight: 600;
+  color: #D97706;
+  background: #FEF3C7;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid #FDE68A;
+}
+
+/* Tabs */
+.ca-trainer-nav-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 8px 16px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+  gap: 6px;
+}
+
+.ca-trainer-nav-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ca-trainer-nav-tab:hover {
+  color: #0F172A;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.ca-trainer-nav-tab.active {
+  color: #4338CA;
+  background: #EEF2FF;
+  border: 1px solid #C7D2FE;
+  font-weight: 700;
+}
+
+/* Body Content */
+.ca-trainer-content-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #FFFFFF;
+}
+
+.ca-trainer-card {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.ca-trainer-card.goal-card {
+  border-left: 3px solid #4F46E5;
+}
+
+.ca-trainer-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ca-trainer-card-header h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-trainer-goal-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #334155;
+}
+
+/* Rules List */
+.ca-trainer-rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ca-trainer-rule-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.ca-trainer-rule-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ca-rule-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #D97706;
+  background: #FEF3C7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.ca-rule-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #334155;
+}
+
+/* Question Pills */
+.ca-trainer-pills-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ca-trainer-ask-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ca-trainer-ask-pill:hover {
+  background: #EEF2FF;
+  border-color: #C7D2FE;
+  color: #4338CA;
+  transform: translateX(2px);
+}
+
+/* Rubric */
+.ca-trainer-sub-note {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  color: #64748B;
+  line-height: 1.45;
+}
+
+.ca-trainer-rubric-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ca-trainer-rubric-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 12px;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #065F46;
+  line-height: 1.4;
+}
+
+.ca-trainer-encouragement {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: 12px;
+}
+
+.ca-trainer-encouragement strong {
+  display: block;
+  font-size: 13px;
+  color: #166534;
+}
+
+.ca-trainer-encouragement p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #15803D;
+}
+
+/* Chat Container */
+.ca-trainer-chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #FFFFFF;
+}
+
+.ca-trainer-messages-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ca-trainer-msg-bubble {
+  max-width: 88%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.ca-trainer-msg-bubble.trainer {
+  align-self: flex-start;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #1E293B;
+  border-bottom-left-radius: 2px;
+}
+
+.ca-trainer-msg-bubble.student {
+  align-self: flex-end;
+  background: #4F46E5;
+  color: #FFFFFF;
+  border-bottom-right-radius: 2px;
+}
+
+.ca-msg-sender-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.ca-msg-text {
+  white-space: pre-line;
+}
+
+/* Chat Quick Bar */
+.ca-chat-quick-bar {
+  padding: 8px 16px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  background: #F8FAFC;
+  border-top: 1px solid #E2E8F0;
+}
+
+.ca-chat-quick-chip {
+  padding: 5px 10px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  font-size: 11px;
+  color: #475569;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ca-chat-quick-chip:hover {
+  background: #EEF2FF;
+  color: #4338CA;
+  border-color: #C7D2FE;
+}
+
+/* Input Bar */
+.ca-trainer-input-bar {
+  padding: 12px 16px;
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  gap: 8px;
+}
+
+.ca-trainer-input-bar input {
+  flex: 1;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 12.5px;
+  color: #0F172A;
+  outline: none;
+}
+
+.ca-trainer-input-bar input:focus {
+  border-color: #4F46E5;
+}
+
+.ca-trainer-send-btn {
+  background: #4F46E5;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ca-trainer-send-btn:hover:not(:disabled) {
+  background: #4338CA;
+}
+
+.ca-trainer-send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

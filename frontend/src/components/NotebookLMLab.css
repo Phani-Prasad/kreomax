@@ -1,0 +1,465 @@
+/* ─────────────────────────────────────────────────────────────────
+   NotebookLM Research Lab — Clean Educational Light Theme
+   Cognitive Academy — AI Creator Suite
+   ───────────────────────────────────────────────────────────────── */
+
+.ca-notebook-lab-clean {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+/* Header */
+.ca-lab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.6rem;
+  border-radius: 16px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  gap: 1rem;
+}
+
+.ca-lab-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ca-lab-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #0284C7;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ca-lab-title {
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.ca-lab-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 2-Column Grid */
+.ca-lab-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 1.25rem;
+  min-height: 520px;
+}
+
+/* Left Panel: Sources & Audio */
+.ca-lab-sources-panel {
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.ca-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.ca-panel-heading {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.04em;
+}
+
+.ca-panel-sub {
+  font-size: 0.7rem;
+  color: #0284C7;
+  font-weight: 600;
+}
+
+/* Sources Pills */
+.ca-sources-pills {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 0.85rem;
+}
+
+.ca-source-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ca-source-pill:hover {
+  background: #F1F5F9;
+  color: #0F172A;
+}
+
+.ca-source-pill.active {
+  background: #EEF2FF;
+  border-color: #4F46E5;
+  color: #4338CA;
+  font-weight: 700;
+}
+
+/* Document Reader */
+.ca-source-reader {
+  flex: 1;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 1rem;
+  overflow-y: auto;
+  margin-bottom: 0.85rem;
+}
+
+.ca-reader-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 0.5rem;
+}
+
+.ca-reader-content {
+  font-size: 0.82rem;
+  color: #334155;
+  line-height: 1.65;
+}
+
+.citation-glow {
+  background: #FEF3C7;
+  color: #92400E;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border-bottom: 2px solid #F59E0B;
+  font-weight: 600;
+}
+
+/* Podcast Card */
+.ca-podcast-card {
+  background: #FAF5FF;
+  border: 1px solid #E9D5FF;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ca-pod-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ca-pod-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #581C87;
+}
+
+.ca-pod-sub {
+  font-size: 0.75rem;
+  color: #7E22CE;
+}
+
+.ca-pod-play-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.55rem;
+  border-radius: 8px;
+  background: #7C3AED;
+  border: none;
+  color: #FFF;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ca-pod-play-btn:hover {
+  background: #6D28D9;
+}
+
+.ca-pod-play-btn.playing {
+  background: #059669;
+}
+
+/* Right Panel: Chat */
+.ca-lab-chat-panel {
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 16px;
+  padding: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.ca-chat-top-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.ca-chat-status-text {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-zero-hallucination-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #059669;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  padding: 3px 9px;
+  border-radius: 99px;
+}
+
+.ca-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.ca-chat-msg {
+  max-width: 86%;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.ca-chat-msg.ai {
+  align-self: flex-start;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #1E293B;
+  border-bottom-left-radius: 2px;
+}
+
+.ca-chat-msg.user {
+  align-self: flex-end;
+  background: #4F46E5;
+  color: #FFFFFF;
+  border-bottom-right-radius: 2px;
+}
+
+.ca-citation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 3px 8px;
+  background: #EEF2FF;
+  border: 1px solid #C7D2FE;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: #4338CA;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Prompt Chips */
+.ca-prompt-chips-row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 6px 0;
+  margin-top: 6px;
+}
+
+.ca-prompt-chip {
+  padding: 5px 12px;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 14px;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ca-prompt-chip:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+/* Input Row */
+.ca-chat-input-row {
+  display: flex;
+  gap: 8px;
+  padding-top: 0.75rem;
+  border-top: 1px solid #F1F5F9;
+  margin-top: 0.5rem;
+}
+
+.ca-input-field {
+  flex: 1;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: #0F172A;
+  font-size: 0.84rem;
+  outline: none;
+}
+
+.ca-input-field:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.ca-send-btn {
+  background: #4F46E5;
+  border: none;
+  color: #FFF;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ca-send-btn:hover:not(:disabled) {
+  background: #4338CA;
+}
+
+.ca-send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Ingest Note Modal */
+.ca-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.ca-modal-content {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.15);
+}
+
+.ca-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ca-modal-header h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.ca-close-btn {
+  background: #F1F5F9;
+  border: none;
+  border-radius: 6px;
+  padding: 4px;
+  cursor: pointer;
+  color: #64748B;
+}
+
+.ca-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 1rem;
+}
+
+.ca-form-group label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.ca-form-group input,
+.ca-form-group textarea {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #0F172A;
+  font-size: 0.84rem;
+  outline: none;
+}
+
+.ca-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ca-lab-grid {
+    grid-template-columns: 1fr;
+  }
+}
