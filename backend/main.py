@@ -73,7 +73,41 @@ def send_email_notification(record: dict) -> bool:
     </body></html>
     """
 
-    # ── Method 1: Resend HTTP API (Port 443 - Never blocked) ────────────────
+    # ── Method 1: Web3Forms HTTP API (Port 443 - Zero-setup, direct to inbox) ─────
+    web3_key = os.environ.get("WEB3FORMS_ACCESS_KEY", "").strip()
+    if web3_key:
+        try:
+            w3_data = json.dumps({
+                "access_key": web3_key,
+                "subject": subject,
+                "from_name": "Kreomax Admissions",
+                "name": record['studentName'],
+                "phone": record['studentPhone'],
+                "email": record.get('studentEmail') or "Not provided",
+                "grade": record.get('studentGrade', 'N/A'),
+                "plan": record['planName'],
+                "applicationId": record['applicationId']
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.web3forms.com/submit",
+                data=w3_data,
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                if resp.status == 200:
+                    resp_json = json.loads(resp.read().decode("utf-8", errors="ignore"))
+                    if resp_json.get("success"):
+                        print(f"[Email Notify: Web3Forms] Successfully delivered to {admin_recipient}")
+                        return True
+                    else:
+                        print(f"[Email Notify Web3Forms message]: {resp_json}")
+        except Exception as e:
+            print(f"[Email Notify Error - Web3Forms]: {e}")
+
+    # ── Method 2: Resend HTTP API (Port 443 - For verified domains) ──────────
     resend_key = os.environ.get("RESEND_API_KEY", "").strip()
     if resend_key:
         try:
@@ -103,33 +137,6 @@ def send_email_notification(record: dict) -> bool:
         except Exception as e:
             LAST_EMAIL_ERROR = f"Resend Error: {e}"
             print(f"[Email Notify Error - Resend]: {e}")
-
-    # ── Method 2: Web3Forms HTTP API (Port 443 - Zero-setup form mailer) ─────
-    web3_key = os.environ.get("WEB3FORMS_ACCESS_KEY", "").strip()
-    if web3_key:
-        try:
-            w3_data = json.dumps({
-                "access_key": web3_key,
-                "subject": subject,
-                "from_name": "Kreomax Admissions",
-                "Student Name": record['studentName'],
-                "Phone": record['studentPhone'],
-                "Email": record.get('studentEmail') or 'Not provided',
-                "Grade": record.get('studentGrade', 'N/A'),
-                "Plan": record['planName'],
-                "Application ID": record['applicationId']
-            }).encode("utf-8")
-            req = urllib.request.Request(
-                "https://api.web3forms.com/submit",
-                data=w3_data,
-                headers={"Content-Type": "application/json"}
-            )
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                if resp.status == 200:
-                    print(f"[Email Notify: Web3Forms] Successfully delivered to {admin_recipient}")
-                    return True
-        except Exception as e:
-            print(f"[Email Notify Error - Web3Forms]: {e}")
 
     # ── Method 3: Gmail SMTP (Direct socket connection) ─────────────────────
     sender = os.environ.get("GMAIL_SENDER_EMAIL", "").strip()
