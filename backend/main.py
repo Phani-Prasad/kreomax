@@ -131,7 +131,6 @@ def send_email_notification(record: dict) -> bool:
                     return True
         except urllib.error.HTTPError as e:
             err_body = e.read().decode("utf-8", errors="ignore")
-            global LAST_EMAIL_ERROR
             LAST_EMAIL_ERROR = f"Resend HTTP {e.code}: {err_body}"
             print(f"[Email Notify Error - Resend]: {LAST_EMAIL_ERROR}")
         except Exception as e:
