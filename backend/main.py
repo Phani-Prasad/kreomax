@@ -95,7 +95,9 @@ def send_email_notification(record: dict) -> bool:
                 data=w3_data,
                 headers={
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Origin": "https://kreomax.vercel.app",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
                 }
             )
             with urllib.request.urlopen(req, timeout=10) as resp:
@@ -1083,7 +1085,8 @@ async def get_payment_config():
         "isLiveKey": bool(key_id and key_id.startswith("rzp_live")),
         "isTestKey": bool(key_id and key_id.startswith("rzp_test")),
         "isConfigured": bool(key_id),
-        "plans": PRICING_PLANS
+        "plans": PRICING_PLANS,
+        "web3formsKey": os.environ.get("WEB3FORMS_ACCESS_KEY", "").strip()
     }
 
 @app.post("/api/payment/create-order")

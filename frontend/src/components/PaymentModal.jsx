@@ -82,6 +82,7 @@ export function PaymentModal({
   const [studentEmail, setStudentEmail] = useState("");
   const [studentPhone, setStudentPhone] = useState("");
   const [studentGrade, setStudentGrade] = useState("Grade 8");
+  const [web3formsKey, setWeb3formsKey] = useState("");
 
   // Reset application state whenever modal is opened
   useEffect(() => {
@@ -96,6 +97,7 @@ export function PaymentModal({
     fetch('/api/payment/config')
       .then(r => r.json())
       .then(data => {
+        if (data.web3formsKey) setWeb3formsKey(data.web3formsKey);
         if (data.status === 'success' && data.plans && data.plans.length > 0) {
           const merged = data.plans.map(p => {
             const match = DEFAULT_PLANS.find(d => d.id === p.id);
@@ -163,6 +165,29 @@ export function PaymentModal({
         });
         localStorage.setItem('kmx_application_id', data.applicationId);
         localStorage.setItem('kmx_applied_plan', selectedPlan.id);
+
+        // ── Direct Client-Side Web3Forms Notification (Bypasses all server IP & datacenter blocks) ──
+        if (web3formsKey) {
+          fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              access_key: web3formsKey,
+              subject: `🎓 New Kreomax Lead: ${studentName.trim()} – ${selectedPlan.name}`,
+              from_name: 'Kreomax Admissions',
+              name: studentName.trim(),
+              phone: studentPhone.trim(),
+              email: studentEmail.trim() || 'kreomax9@gmail.com',
+              grade: studentGrade,
+              plan: selectedPlan.name,
+              applicationId: data.applicationId,
+              message: `New Admission Application Received:\n\n• Student: ${studentName.trim()}\n• Phone: ${studentPhone.trim()}\n• Email: ${studentEmail.trim() || 'Not provided'}\n• Grade: ${studentGrade}\n• Plan: ${selectedPlan.name}\n• Application ID: ${data.applicationId}`
+            })
+          }).catch(err => console.log('[Client-side Web3Forms Notice]:', err));
+        }
       } else {
         throw new Error(data.message || 'Failed to submit application.');
       }
