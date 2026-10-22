@@ -77,13 +77,15 @@ def send_email_notification(record: dict) -> bool:
     web3_key = os.environ.get("WEB3FORMS_ACCESS_KEY", "").strip()
     if web3_key:
         try:
+            valid_email = record.get('studentEmail') if (record.get('studentEmail') and '@' in record.get('studentEmail')) else admin_recipient
             w3_data = json.dumps({
                 "access_key": web3_key,
                 "subject": subject,
                 "from_name": "Kreomax Admissions",
                 "name": record['studentName'],
                 "phone": record['studentPhone'],
-                "email": record.get('studentEmail') or "Not provided",
+                "email": valid_email,
+                "message": f"Student: {record['studentName']} | Phone: {record['studentPhone']} | Grade: {record.get('studentGrade', 'N/A')} | Plan: {record['planName']} | App ID: {record['applicationId']}",
                 "grade": record.get('studentGrade', 'N/A'),
                 "plan": record['planName'],
                 "applicationId": record['applicationId']
@@ -97,14 +99,19 @@ def send_email_notification(record: dict) -> bool:
                 }
             )
             with urllib.request.urlopen(req, timeout=10) as resp:
-                if resp.status == 200:
-                    resp_json = json.loads(resp.read().decode("utf-8", errors="ignore"))
-                    if resp_json.get("success"):
-                        print(f"[Email Notify: Web3Forms] Successfully delivered to {admin_recipient}")
-                        return True
-                    else:
-                        print(f"[Email Notify Web3Forms message]: {resp_json}")
+                resp_json = json.loads(resp.read().decode("utf-8", errors="ignore"))
+                if resp_json.get("success"):
+                    print(f"[Email Notify: Web3Forms] Successfully delivered to {admin_recipient}")
+                    return True
+                else:
+                    LAST_EMAIL_ERROR = f"Web3Forms response: {resp_json}"
+                    print(f"[Email Notify Web3Forms message]: {resp_json}")
+        except urllib.error.HTTPError as e:
+            err_body = e.read().decode("utf-8", errors="ignore")
+            LAST_EMAIL_ERROR = f"Web3Forms HTTP {e.code}: {err_body}"
+            print(f"[Email Notify Error - Web3Forms]: {LAST_EMAIL_ERROR}")
         except Exception as e:
+            LAST_EMAIL_ERROR = f"Web3Forms Error: {e}"
             print(f"[Email Notify Error - Web3Forms]: {e}")
 
     # ── Method 2: Resend HTTP API (Port 443 - For verified domains) ──────────
