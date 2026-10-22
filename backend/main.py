@@ -38,6 +38,8 @@ load_env_file()
 # ADMIN NOTIFICATION HELPERS
 # ==============================================================================
 
+LAST_EMAIL_ERROR = None
+
 def send_email_notification(record: dict) -> bool:
     """
     Sends an email notification to the admin.
@@ -46,6 +48,8 @@ def send_email_notification(record: dict) -> bool:
     2. Web3Forms API (HTTP Port 443 - Free transactional form forwarder)
     3. Gmail SMTP (Port 587 - Works on localhost or paid hosts, blocked on Render free tier)
     """
+    global LAST_EMAIL_ERROR
+    LAST_EMAIL_ERROR = None
     admin_recipient = os.environ.get("ADMIN_EMAIL", "kreomax9@gmail.com").strip()
     subject = f"🎓 New Kreomax Lead: {record['studentName']} – {record['planName']}"
 
@@ -91,7 +95,13 @@ def send_email_notification(record: dict) -> bool:
                 if resp.status in (200, 201):
                     print(f"[Email Notify: Resend] Successfully delivered to {admin_recipient}")
                     return True
+        except urllib.error.HTTPError as e:
+            err_body = e.read().decode("utf-8", errors="ignore")
+            global LAST_EMAIL_ERROR
+            LAST_EMAIL_ERROR = f"Resend HTTP {e.code}: {err_body}"
+            print(f"[Email Notify Error - Resend]: {LAST_EMAIL_ERROR}")
         except Exception as e:
+            LAST_EMAIL_ERROR = f"Resend Error: {e}"
             print(f"[Email Notify Error - Resend]: {e}")
 
     # ── Method 2: Web3Forms HTTP API (Port 443 - Zero-setup form mailer) ─────
@@ -1027,7 +1037,8 @@ async def test_email_delivery():
             "web3forms": bool(os.environ.get("WEB3FORMS_ACCESS_KEY")),
             "gmail_smtp": bool(os.environ.get("GMAIL_SENDER_EMAIL") and os.environ.get("GMAIL_APP_PASSWORD"))
         },
-        "recipient": os.environ.get("ADMIN_EMAIL", "kreomax9@gmail.com")
+        "recipient": os.environ.get("ADMIN_EMAIL", "kreomax9@gmail.com"),
+        "lastError": LAST_EMAIL_ERROR
     }
 
 class CreateOrderRequest(BaseModel):
