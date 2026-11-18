@@ -47,7 +47,7 @@ export function AdminPage() {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       const message = res.status === 401 ? 'That admin token is not correct.'
-        : res.status === 503 ? 'Admin access is not set up on the server (ADMIN_API_TOKEN is empty).'
+        : res.status === 503 ? 'Admin is only available on your own computer. Start the backend there with ADMIN_LOCAL=1 in backend/.env, and open this page from the same computer.'
           : (typeof data.detail === 'string' ? data.detail : 'Something went wrong.');
       throw Object.assign(new Error(message), { status: res.status });
     }
@@ -70,7 +70,8 @@ export function AdminPage() {
     }
   }, [api]);
 
-  useEffect(() => { if (token) load(); }, [token, load]);
+  // On your own computer no password is needed, so always try straight away.
+  useEffect(() => { load(); }, [token, load]);
 
   const unlock = (e) => {
     e.preventDefault();
@@ -120,7 +121,7 @@ export function AdminPage() {
         <div className="ad-lock">
           <KreomaxIcon size={44} />
           <h1>Admin</h1>
-          <p>Enter the admin token to manage studio access.</p>
+          <p>Admin opens on the computer where admin mode is switched on. If you set an admin password instead, enter it below.</p>
           <form onSubmit={unlock}>
             <input type="password" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Admin token" autoComplete="off" aria-label="Admin token" autoFocus />
             <button className="btn-primary" type="submit" disabled={busy}>{busy ? 'Checking...' : 'Unlock'}</button>

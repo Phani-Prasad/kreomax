@@ -11,10 +11,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import List, Optional, Dict, Any
 import html
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import access
+import db
+import leads
 from security import require_admin, ai_limit, form_limit, access_limit
 
 from curriculum_data import MODULES
@@ -30,7 +33,7 @@ def load_env_file():
                     k, v = line.split("=", 1)
                     k, v = k.strip(), v.strip().strip('"').strip("'")
                     if k and v:
-                        os.environ[k] = v
+                        os.environ.setdefault(k, v)  # real environment settings win over the file
 
 load_env_file()
 
@@ -182,10 +185,23 @@ GATEWAY_KEYS = {
 }
 CUSTOM_API_KEY = GATEWAY_KEYS["gemini"]
 
+@asynccontextmanager
+async def lifespan(_app):
+    # Create the tables if needed, and bring in leads from the old JSON file once.
+    try:
+        db.init_db()
+        imported = leads.import_legacy(os.path.join(os.path.dirname(__file__), "leads_data.json"))
+        print(f"[Database] Using {db.describe()}" + (f" (imported {imported} earlier enquiries)" if imported else ""))
+    except Exception as e:  # keep the API up so the problem is visible in the logs
+        print(f"[Database ERROR] {e}")
+    yield
+
+
 app = FastAPI(
     title="Cognitive Academy API",
     description="24-Hour Multimodal AI LMS & Creator Suite Backend",
-    version="1.1.0"
+    version="1.2.0",
+    lifespan=lifespan,
 )
 
 # Enable CORS for frontend development
@@ -964,21 +980,6 @@ PROGRAMMES = [
     }
 ]
 
-LEADS_PATH = os.environ.get("LEADS_FILE") or os.path.join(os.path.dirname(__file__), "leads_data.json")
-
-
-def _load_leads() -> list:
-    """Reload previously saved leads so a restart never discards them."""
-    try:
-        with open(LEADS_PATH, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return data if isinstance(data, list) else []
-    except (OSError, ValueError):
-        return []
-
-
-ADMISSION_APPLICATIONS = _load_leads()
-
 class AdmissionApplicationRequest(BaseModel):
     planId: str = Field(max_length=64)
     planName: Optional[str] = Field(default="Creator Cohort", max_length=120)
@@ -992,29 +993,13 @@ class AdmissionApplicationRequest(BaseModel):
 async def submit_admission_application(req: AdmissionApplicationRequest):
     """
     Records student pre-registration / admission application.
-    Saves lead to memory and disk, and returns a pre-filled WhatsApp link.
+    Saves the lead to the database, and returns a pre-filled WhatsApp link.
     """
-    app_id = f"KMX-ADM-{int(time.time()) % 100000:05d}"
-    record = {
-        "applicationId": app_id,
-        "planId": req.planId,
-        "planName": req.planName,
-        "studentName": req.studentName,
-        "studentEmail": req.studentEmail,
-        "studentPhone": req.studentPhone,
-        "studentGrade": req.studentGrade,
-        "notes": req.notes,
-        "timestamp": int(time.time()),
-        "status": "pending_consultation"
-    }
-    ADMISSION_APPLICATIONS.append(record)
-
-    # Save to leads_data.json
-    try:
-        with open(LEADS_PATH, "w", encoding="utf-8") as f:
-            json.dump(ADMISSION_APPLICATIONS, f, indent=2)
-    except Exception as e:
-        print(f"[Lead Persistence Notice]: {e}")
+    record = leads.add(
+        plan_id=req.planId, plan_name=req.planName, name=req.studentName, email=req.studentEmail,
+        phone=req.studentPhone, grade=req.studentGrade, notes=req.notes,
+    )
+    app_id = record["applicationId"]
 
     # ── Fire admin email notification (non-blocking, errors are logged not raised) ──
     send_email_notification(record)
@@ -1034,10 +1019,11 @@ async def submit_admission_application(req: AdmissionApplicationRequest):
 
 @app.get("/api/admissions/list", dependencies=[Depends(require_admin)])
 async def list_admission_applications():
+    rows = leads.list_all()
     return {
         "status": "success",
-        "count": len(ADMISSION_APPLICATIONS),
-        "applications": ADMISSION_APPLICATIONS
+        "count": len(rows),
+        "applications": rows
     }
 
 @app.get("/api/admissions/test-email", dependencies=[Depends(require_admin)])

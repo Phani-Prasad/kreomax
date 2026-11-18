@@ -8,12 +8,13 @@ import { installAccessHeader } from './access.js'
 
 installAccessHeader()
 
-// /privacy and /terms are policy pages, /admin is the private access manager
+// /privacy and /terms are policy pages. /admin (access manager) is available only in development.
 // (vercel.json rewrites unknown paths to index.html).
 const slug = window.location.pathname.replace(/^\/+|\/+$/g, '')
 
 function Root() {
-  if (slug === 'admin') return <AdminPage />
+  // The admin page exists only when you run the project on your own computer (npm run dev).
+  if (slug === 'admin' && import.meta.env.DEV) return <AdminPage />
   if (LEGAL_SLUGS.includes(slug)) return <LegalPage slug={slug} />
   return <App />
 }

@@ -8,11 +8,29 @@ from threading import Lock
 from fastapi import Header, HTTPException, Request
 
 
-def require_admin(x_admin_token: str = Header(default="")) -> None:
-    """FastAPI dependency. Fails closed: if ADMIN_API_TOKEN is unset, admin routes are disabled."""
+def _is_this_computer(request: Request) -> bool:
+    """True only for a direct connection from the same machine, not via any proxy or the internet."""
+    if request.headers.get("x-forwarded-for") or request.headers.get("forwarded") or request.headers.get("x-real-ip"):
+        return False
+    host = request.client.host if request.client else ""
+    return host in ("127.0.0.1", "::1", "localhost")
+
+
+def admin_local_enabled() -> bool:
+    return os.environ.get("ADMIN_LOCAL", "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def require_admin(request: Request, x_admin_token: str = Header(default="")) -> None:
+    """Admin actions are allowed:
+      1. from this computer, when ADMIN_LOCAL is switched on in backend/.env (no password needed), or
+      2. with the ADMIN_API_TOKEN password, if one is set.
+    The live website sets neither, so admin routes are simply unavailable there.
+    """
+    if admin_local_enabled() and _is_this_computer(request):
+        return
     expected = os.environ.get("ADMIN_API_TOKEN", "").strip()
     if not expected:
-        raise HTTPException(status_code=503, detail="Admin access is not configured on this server.")
+        raise HTTPException(status_code=503, detail="Admin is only available on the computer where admin mode is switched on.")
     if not hmac.compare_digest(x_admin_token.encode("utf-8"), expected.encode("utf-8")):
         raise HTTPException(status_code=401, detail="Invalid admin token.")
 

@@ -1,54 +1,26 @@
-"""Studio access codes.
+"""Studio access codes, stored in the database (see db.py).
 
 A code is created by the admin after someone registers or requests access (for example on WhatsApp),
 and sent to them. The student enters it at "Launch Studio". Codes can be switched off at any time.
-
-Storage is a small JSON file (like the enquiry leads). On hosts with a temporary disk (such as the
-Render free tier) the file is lost on a redeploy, so use persistent storage before relying on it.
 """
-import json
-import os
 import re
 import secrets
-import threading
 import time
 from typing import Optional
 
 from fastapi import Header, HTTPException
+from sqlalchemy import insert, select, update
+from sqlalchemy.exc import IntegrityError
 
-ACCESS_PATH = os.environ.get("ACCESS_FILE") or os.path.join(os.path.dirname(__file__), "access_data.json")
+from db import access_codes, get_engine, reset as _db_reset
 
 # No 0/O, 1/I/L: easy to read out or type from a WhatsApp message.
 _ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
-_lock = threading.Lock()
-_records: dict = {}
 
 
-def _load() -> dict:
-    try:
-        with open(ACCESS_PATH, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return {r["code"]: r for r in data if isinstance(r, dict) and "code" in r}
-    except (OSError, ValueError, KeyError):
-        return {}
-
-
-def _save() -> None:
-    tmp = ACCESS_PATH + ".tmp"
-    with open(tmp, "w", encoding="utf-8") as f:
-        json.dump(list(_records.values()), f, indent=2)
-    os.replace(tmp, ACCESS_PATH)
-
-
-def reset(path: Optional[str] = None) -> None:
-    """Point the store at a different file and reload it (used by tests)."""
-    global ACCESS_PATH, _records
-    if path:
-        ACCESS_PATH = path
-    _records = _load()
-
-
-_records = _load()
+def reset(url: Optional[str] = None) -> None:
+    """Switch to another database (used by tests)."""
+    _db_reset(url)
 
 
 def normalize(code: str) -> str:
@@ -59,64 +31,63 @@ def pretty(code: str) -> str:
     return f"{code[:4]}-{code[4:]}" if len(code) == 8 else code
 
 
-def _new_code() -> str:
-    while True:
-        code = "".join(secrets.choice(_ALPHABET) for _ in range(8))
-        if code not in _records:
-            return code
+def _public(row) -> dict:
+    return {
+        "code": row["code"], "display": pretty(row["code"]), "name": row["name"], "phone": row["phone"],
+        "applicationId": row["application_id"], "note": row["note"], "status": row["status"],
+        "createdAt": row["created_at"], "lastUsedAt": row["last_used_at"], "uses": row["uses"],
+    }
 
 
-def _public(rec: dict) -> dict:
-    return {**rec, "display": pretty(rec["code"])}
+def _get(conn, code: str):
+    return conn.execute(select(access_codes).where(access_codes.c.code == code)).mappings().first()
 
 
 def create(name: str, phone: str = "", application_id: Optional[str] = None, note: str = "") -> dict:
-    with _lock:
-        code = _new_code()
-        rec = {
-            "code": code,
-            "name": name.strip(),
-            "phone": phone.strip(),
-            "applicationId": application_id,
-            "note": note.strip(),
-            "status": "active",
-            "createdAt": int(time.time()),
-            "lastUsedAt": None,
-            "uses": 0,
-        }
-        _records[code] = rec
-        _save()
-        return _public(rec)
+    now = int(time.time())
+    for _ in range(10):
+        code = "".join(secrets.choice(_ALPHABET) for _ in range(8))
+        try:
+            with get_engine().begin() as conn:
+                conn.execute(insert(access_codes).values(
+                    code=code, name=name.strip(), phone=phone.strip(), application_id=application_id,
+                    note=note.strip(), status="active", created_at=now, last_used_at=None, uses=0,
+                ))
+                return _public(_get(conn, code))
+        except IntegrityError:
+            continue
+    raise RuntimeError("Could not allocate an access code.")
 
 
 def list_records() -> list:
-    with _lock:
-        return [_public(r) for r in sorted(_records.values(), key=lambda r: r["createdAt"], reverse=True)]
+    with get_engine().connect() as conn:
+        rows = conn.execute(select(access_codes).order_by(access_codes.c.created_at.desc())).mappings().all()
+    return [_public(r) for r in rows]
 
 
 def set_status(code: str, status: str) -> Optional[dict]:
     code = normalize(code)
-    with _lock:
-        rec = _records.get(code)
-        if not rec:
+    with get_engine().begin() as conn:
+        if not _get(conn, code):
             return None
-        rec["status"] = status
-        _save()
-        return _public(rec)
+        conn.execute(update(access_codes).where(access_codes.c.code == code).values(status=status))
+        return _public(_get(conn, code))
 
 
 def verify(code: str, touch: bool = True) -> Optional[dict]:
     """Return the record for an active code, or None."""
     code = normalize(code)
-    with _lock:
-        rec = _records.get(code)
-        if not rec or rec["status"] != "active":
+    if len(code) != 8:
+        return None
+    with get_engine().begin() as conn:
+        row = _get(conn, code)
+        if not row or row["status"] != "active":
             return None
         if touch:
-            rec["lastUsedAt"] = int(time.time())
-            rec["uses"] = rec.get("uses", 0) + 1
-            _save()
-        return _public(rec)
+            conn.execute(update(access_codes).where(access_codes.c.code == code)
+                         .values(last_used_at=int(time.time()), uses=access_codes.c.uses + 1))
+            row = _get(conn, code)
+        return _public(row)
 
 
 def require_access(x_access_code: str = Header(default="")) -> dict:

@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 import access  # noqa: E402
+import db  # noqa: E402
 import main  # noqa: E402
 import security  # noqa: E402
 
@@ -15,10 +16,8 @@ ADMIN = {"X-Admin-Token": "s3cret"}
 
 
 @pytest.fixture()
-def client(monkeypatch, tmp_path):
+def client(monkeypatch):
     monkeypatch.setenv("ADMIN_API_TOKEN", "s3cret")
-    monkeypatch.setattr(main, "LEADS_PATH", str(tmp_path / "leads.json"))
-    access.reset(str(tmp_path / "access.json"))  # never touch the real access file
     for limiter in (security.ai_limit, security.form_limit, security.access_limit):
         limiter._hits.clear()
     return TestClient(main.app)
@@ -90,7 +89,7 @@ def test_ai_route_accepts_a_valid_code(client):
     assert client.post("/api/ai/image-generate", json={}, headers={"X-Access-Code": rec["code"]}).status_code == 401
 
 
-def test_codes_survive_a_restart(client, tmp_path):
+def test_codes_survive_a_restart(client, _isolated_db):
     rec = make_code(client)
-    access.reset(str(tmp_path / "access.json"))  # simulate a fresh process reading the same file
+    db.reset(_isolated_db)  # simulate a fresh process connecting to the same database
     assert client.post("/api/access/verify", json={"code": rec["code"]}).status_code == 200

@@ -54,3 +54,8 @@ Thumbs.db
 *.sln
 *.sw?
 backend/access_data.json
+
+# Local databases (contain real enquiries and access codes)
+*.db
+*.db-journal
+backend/kreomax.db

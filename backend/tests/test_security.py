@@ -12,10 +12,7 @@ import security  # noqa: E402
 
 
 @pytest.fixture()
-def client(monkeypatch, tmp_path):
-    # Never touch the real leads file from tests.
-    monkeypatch.setattr(main, "LEADS_PATH", str(tmp_path / "leads.json"))
-    monkeypatch.setattr(main, "ADMISSION_APPLICATIONS", [])
+def client(monkeypatch):
     monkeypatch.setattr(main, "send_email_notification", lambda record: True)
     for limiter in (security.ai_limit, security.form_limit):
         limiter._hits.clear()
