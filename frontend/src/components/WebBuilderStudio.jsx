@@ -14,12 +14,15 @@ import {
   ArrowRight
 } from 'lucide-react';
 import './WebBuilderStudio.css';
+import { StudioHeader } from './StudioHeader';
 
 export function WebBuilderStudio({ 
   projectTheme, 
+  userProfile,
   onSaveAsset, 
   onNavigateNext 
 }) {
+  const creatorName = userProfile?.name && userProfile.name !== 'Creator' ? userProfile.name : 'a Kreomax creator';
   const [deviceViewport, setDeviceViewport] = useState('desktop'); // 'desktop' | 'tablet' | 'mobile'
   const [viewMode, setViewMode] = useState('preview'); // 'preview' | 'code'
   const [accentColor, setAccentColor] = useState('#8B5CF6');
@@ -31,34 +34,34 @@ export function WebBuilderStudio({
     {
       num: 1,
       title: "Scene 1: Lunar Base Signal",
-      text: "Earth hangs like a glowing blue sapphire against the velvet black cosmos. 14-year-old student cadet Aarav kneels on the moon surface beside the Pragyan-X rover.",
-      dialogue: "AARAV: 'ISRO Base Bengaluru, do you copy? The deep ice scanner just discovered an encrypted signal!'"
+      text: "Earth hangs like a glowing blue sapphire against the velvet black cosmos. 14-year-old student cadet Kai kneels on the moon surface beside the Pragyan-X rover.",
+      dialogue: "KAI: 'Mission Control, do you copy? The deep ice scanner just discovered an encrypted signal!'"
     },
     {
       num: 2,
       title: "Scene 2: Ancient Ice Vault",
-      text: "Massive glowing crystal ice pillars hum with mysterious energy. Golden telemetry lights reflect on Aarav's lunar suit as the rover illuminates the cavern.",
-      dialogue: "DR. VIKRAM RAO: 'Careful Aarav. That inscription predates our lunar colony by centuries!'"
+      text: "Massive glowing crystal ice pillars hum with mysterious energy. Golden telemetry lights reflect on Kai's lunar suit as the rover illuminates the cavern.",
+      dialogue: "MISSION CONTROL: 'Careful, Kai. That inscription predates our lunar colony by centuries!'"
     },
     {
       num: 3,
       title: "Scene 3: High-Speed Solar Rover Chase",
-      text: "A sleek solar rover zooms across the crater rim. Autonomous security probes sweep golden beams of light as Aarav maneuvers through low-gravity boulder fields.",
-      dialogue: "AARAV: 'Hold on tight! Activating the magnetic thrusters now!'"
+      text: "A sleek solar rover zooms across the crater rim. Autonomous security probes sweep golden beams of light as Kai maneuvers through low-gravity boulder fields.",
+      dialogue: "KAI: 'Hold on tight! Activating the magnetic thrusters now!'"
     },
     {
       num: 4,
       title: "Scene 4: Golden Earthrise Finale",
       text: "The sun crowns the moon horizon in dazzling gold and diamond rays. The central communication spire pulses green as the transmission reaches Bengaluru.",
-      dialogue: "AARAV: 'We decoded it! The water vault is secured for every future astronaut!'"
+      dialogue: "KAI: 'We decoded it! The water vault is secured for every future astronaut!'"
     }
   ];
 
   const galleryImages = [
-    { title: "Rooftop Clue", url: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop&q=80", tag: "Scene 1" },
-    { title: "Secret Data Vault", url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=80", tag: "Scene 2" },
-    { title: "Skyrail Action Chase", url: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&auto=format&fit=crop&q=80", tag: "Scene 3" },
-    { title: "Grand Sunrise Finale", url: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&auto=format&fit=crop&q=80", tag: "Scene 4" }
+    { title: "Rooftop Clue", url: `${window.location.origin}/images/game-map-islands.webp`, tag: "Scene 1" },
+    { title: "Secret Data Vault", url: `${window.location.origin}/images/kreomax-city.webp`, tag: "Scene 2" },
+    { title: "Skyrail Action Chase", url: `${window.location.origin}/images/hero-slide-1.webp`, tag: "Scene 3" },
+    { title: "Grand Sunrise Finale", url: `${window.location.origin}/images/hero-slide-3.webp`, tag: "Scene 4" }
   ];
 
   // Generated code snippets for the Code Inspector
@@ -77,7 +80,7 @@ export function WebBuilderStudio({
     <div class="container">
       <span class="badge">MY CREATOR ADVENTURE</span>
       <h1>${projectTheme}</h1>
-      <p class="hero-sub">An epic story created with AI tools: NotebookLM, ChatGPT, Midjourney, and Google Veo!</p>
+      <p class="hero-sub">An epic story created with Kreomax AI studios: story, research, art and video!</p>
       <div class="hero-btns">
         <a href="#trailer" class="btn-primary">Watch My Movie Trailer</a>
         <a href="#story" class="btn-outline">Read The Story</a>
@@ -88,7 +91,7 @@ export function WebBuilderStudio({
   <!-- Movie Trailer -->
   <section id="trailer" class="section">
     <div class="container">
-      <h2>Movie Trailer (Google Veo)</h2>
+      <h2>Movie Trailer</h2>
       <div class="video-container">
         <img src="assets/trailer_still.jpg" alt="Trailer Preview">
         <button class="play-overlay">▶</button>
@@ -124,7 +127,7 @@ export function WebBuilderStudio({
   </section>
 
   <footer>
-    <p>Created by Alex Mercer (Age 14) • Built at Kreomax</p>
+    <p>Created by ${creatorName} • Built at Kreomax</p>
   </footer>
   <script src="script.js"></script>
 </body>
@@ -134,7 +137,7 @@ export function WebBuilderStudio({
   --primary: ${accentColor};
   --bg-dark: #0A0D14;
   --bg-card: rgba(18, 24, 38, 0.7);
-  --text: #F8FAFC;
+  --text: #F8F5FF;
 }
 
 body {
@@ -203,33 +206,22 @@ Created at Kreomax!
 
   return (
     <div className="ca-builder-container">
+      <StudioHeader
+        level={5}
+        title="Website Builder"
+        subtitle="Preview and export your project showcase website."
+        actions={(
+          <>
+            <button className="btn-secondary btn-sm" onClick={handleDownloadWebsiteZip} disabled={isExporting}>
+              <Download size={14} /><span>{isExporting ? 'Exporting...' : 'Export Website'}</span>
+            </button>
+            <button className="btn-primary btn-sm" onClick={onNavigateNext}><span>Next: Level 6</span><ArrowRight size={14} /></button>
+          </>
+        )}
+      />
+
       {/* Header */}
       <div className="ca-builder-header glass-panel">
-        <div className="ca-builder-title-row">
-          <div className="ca-tool-badge badge-amber">
-            <Layout size={14} />
-            <span>LEVEL 5 · WEBSITE BUILDER</span>
-          </div>
-          <div className="ca-btn-group">
-            <button 
-              className="btn-secondary btn-sm" 
-              onClick={handleDownloadWebsiteZip}
-              disabled={isExporting}
-            >
-              <Download size={14} />
-              <span>{isExporting ? "Exporting..." : "Export Website"}</span>
-            </button>
-            <button className="btn-success btn-sm" onClick={onNavigateNext}>
-              <span>Level 6</span>
-              <ArrowRight size={14} />
-            </button>
-          </div>
-        </div>
-
-        <h2 className="ca-builder-title">Website Builder</h2>
-        <p className="ca-builder-desc">
-          Preview and export your project showcase website.
-        </p>
 
         {/* Viewport & View Mode Bar */}
         <div className="ca-builder-controls-bar">
@@ -305,7 +297,7 @@ Created at Kreomax!
                 <span className="mock-badge">STUDENT CREATOR SHOWCASE</span>
                 <h1 className="mock-title">{projectTheme}</h1>
                 <p className="mock-sub">
-                  An adventure story created using real AI tools: NotebookLM, ChatGPT, Midjourney, and Google Veo!
+                  An adventure story created with Kreomax AI studios: story, research, art and video!
                 </p>
                 <div className="mock-btns">
                   <button className="mock-btn-primary" style={{ backgroundColor: accentColor }}>
@@ -319,10 +311,10 @@ Created at Kreomax!
 
               {/* Mock Video Section */}
               <div className="mock-section">
-                <h2 className="mock-sec-title">Movie Trailer (Google Veo)</h2>
+                <h2 className="mock-sec-title">Movie Trailer</h2>
                 <div className="mock-video-box">
                   <img 
-                    src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1000&auto=format&fit=crop&q=80" 
+                    src={`${window.location.origin}/images/game-map-islands.webp`} 
                     alt="Trailer Still"
                     className="mock-video-img"
                   />
@@ -355,7 +347,7 @@ Created at Kreomax!
 
               {/* Mock Gallery Section */}
               <div className="mock-section">
-                <h2 className="mock-sec-title">My AI Concept Art Gallery (Midjourney)</h2>
+                <h2 className="mock-sec-title">My AI Concept Art Gallery</h2>
                 <div className="mock-gallery-grid">
                   {galleryImages.map((img, i) => (
                     <div key={i} className="mock-gallery-item">
@@ -371,7 +363,7 @@ Created at Kreomax!
 
               {/* Mock Footer */}
               <footer className="mock-footer">
-                <p>Created by Alex Mercer (Age 14) • Built at Kreomax</p>
+                <p>Created by {creatorName} • Built at Kreomax</p>
               </footer>
             </div>
           </div>

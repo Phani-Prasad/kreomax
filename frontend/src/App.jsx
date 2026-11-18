@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { LeftPaneNav, INDIAN_THEMES } from './components/LeftPaneNav';
-import { WorkspaceTopBar } from './components/WorkspaceTopBar';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Sidebar } from './components/Sidebar';
+import { TopBar } from './components/TopBar';
+import { ProfileModal } from './components/ProfileModal';
+import { AccessGate } from './components/AccessGate';
+import { getStoredAccess, hasStoredAccess, saveAccess, clearAccess, verifyAccess } from './access';
+import { PROFILE_KEY, PROGRESS_KEY, THEME_KEY, loadStored, saveStored } from './data/workspace';
 import { KeyConfigModal } from './components/KeyConfigModal';
 import { CurriculumView } from './components/CurriculumView';
 import { NotebookLMLab } from './components/NotebookLMLab';
@@ -21,7 +25,7 @@ const FALLBACK_MODULES = [
     id: "m1",
     number: 1,
     title: "Level 1: Story Writing",
-    tool: "ChatGPT",
+    tool: "Story Studio",
     toolBadge: "Story Writing",
     completionTitle: "AI Story Creator",
     completionBadge: "Story Creator",
@@ -29,7 +33,7 @@ const FALLBACK_MODULES = [
     color: "#059669",
     deliverable: "Story Script (.MD)",
     studioType: "story",
-    description: "Create your hero, outline 4 adventure scenes, and write screenplay dialogue with ChatGPT.",
+    description: "Create your hero, outline 4 adventure scenes, and write screenplay dialogue with AI.",
     hoursList: [
       { hour: 1, title: "Hero Profile Setup", duration: "1 hr", summary: "Name, superpower, flaw, and adventure world.", action: "Complete hero profile." },
       { hour: 2, title: "Prompt Engineering Basics", duration: "1 hr", summary: "Master Role, Context, Task, and Constraints formula.", action: "Test prompt formula." },
@@ -41,15 +45,15 @@ const FALLBACK_MODULES = [
     id: "m2",
     number: 2,
     title: "Level 2: Research",
-    tool: "NotebookLM",
+    tool: "Research Lab",
     toolBadge: "Research",
     completionTitle: "AI Researcher",
     completionBadge: "Researcher",
     hours: "Hours 5 – 8",
-    color: "#4F46E5",
+    color: "#6D4FD8",
     deliverable: "Research Guide (.MD)",
     studioType: "notebooklm",
-    description: "Upload world notes and verify facts with citation sources using NotebookLM.",
+    description: "Upload world notes and verify facts with exact citation sources.",
     hoursList: [
       { hour: 5, title: "Source Documents Ingestion", duration: "1 hr", summary: "Add reference documents and mission source material.", action: "Upload 2 sources." },
       { hour: 6, title: "Fact Citations & Verification", duration: "1 hr", summary: "Ask questions and verify facts with exact citation proof.", action: "Find 3 verified facts." },
@@ -61,7 +65,7 @@ const FALLBACK_MODULES = [
     id: "m3",
     number: 3,
     title: "Level 3: Images & Art",
-    tool: "Midjourney",
+    tool: "Visual Studio",
     toolBadge: "Images & Art",
     completionTitle: "Digital Artist",
     completionBadge: "Digital Artist",
@@ -81,7 +85,7 @@ const FALLBACK_MODULES = [
     id: "m4",
     number: 4,
     title: "Level 4: Video & Animation",
-    tool: "Google Veo",
+    tool: "Motion Studio",
     toolBadge: "Video & Animation",
     completionTitle: "AI Animator",
     completionBadge: "Animator",
@@ -139,21 +143,71 @@ const FALLBACK_MODULES = [
   }
 ];
 
+const WORKSPACE_TABS = ['roadmap', 'curriculum', 'story', 'notebooklm', 'visual', 'motion', 'web-builder', 'capstone'];
+const rawTab = () => window.location.hash.replace(/^#\/?/, '');
+// The studio only opens for someone holding a valid access code (see access.js).
+function tabFromLocation() {
+  const t = rawTab();
+  return hasStoredAccess() && WORKSPACE_TABS.includes(t) ? t : 'landing';
+}
+
 function App() {
-  const [activeTab, setActiveTab] = useState('landing');
+  const [activeTab, setActiveTabState] = useState(tabFromLocation);
+  // Which screen the student wanted when the access-code dialog opened (null = closed).
+  const [gateTab, setGateTab] = useState(() => (!hasStoredAccess() && WORKSPACE_TABS.includes(rawTab()) ? rawTab() : null));
+
+  // Workspace screens are addressable (#/story, #/roadmap ...) so refresh, links and the back button work.
+  const setActiveTab = (tab) => {
+    if (tab !== 'landing' && !hasStoredAccess()) { setGateTab(tab); return; }
+    const url = tab === 'landing' ? window.location.pathname + window.location.search : `#/${tab}`;
+    window.history.pushState(null, '', url);
+    setActiveTabState(tab);
+    window.scrollTo(0, 0);
+  };
+  useEffect(() => {
+    const onNav = () => setActiveTabState(tabFromLocation());
+    window.addEventListener('popstate', onNav);
+    return () => window.removeEventListener('popstate', onNav);
+  }, []);
   const [modules, setModules] = useState(FALLBACK_MODULES);
-  const [completedHours, setCompletedHours] = useState([1, 2, 3, 4]); // 4 hours done (Badge 1 unlocked)
-  const [projectTheme, setProjectTheme] = useState('My AI Adventure');
+  const [completedHours, setCompletedHours] = useState(() => loadStored(PROGRESS_KEY, []));
+  const [projectTheme, setProjectTheme] = useState(() => loadStored(THEME_KEY, 'My AI Adventure'));
   const [showThemeModal, setShowThemeModal] = useState(false);
   
-  // Student Profile with Indian context
-  const [userProfile, setUserProfile] = useState({
-    name: "Aarav Sharma",
-    email: "aarav.sharma@atl.gov.in",
-    role: "ATL Student Innovator (Grade 8)",
-    school: "Kendriya Vidyalaya / Bengaluru Public School",
-    avatar: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=150&auto=format&fit=crop&q=80"
-  });
+  // The learner's own details, kept on this device. No demo identity.
+  const [profile, setProfile] = useState(() => loadStored(PROFILE_KEY, null));
+  const [editingProfile, setEditingProfile] = useState(false);
+  const userProfile = useMemo(() => ({
+    name: profile?.name || 'Creator',
+    role: [profile?.grade, profile?.school].filter(Boolean).join(' · ') || 'Student creator',
+    school: profile?.school || '',
+  }), [profile]);
+
+  useEffect(() => { saveStored(PROGRESS_KEY, completedHours); }, [completedHours]);
+
+  const requestStudio = (tab) => setActiveTab(tab || 'roadmap');
+  const leaveStudio = () => { clearAccess(); setActiveTab('landing'); };
+  const onAccessGranted = (access) => {
+    saveAccess(access);
+    if (!profile && access.name) {
+      const p = { name: access.name, grade: '', school: '' };
+      setProfile(p);
+      saveStored(PROFILE_KEY, p);
+    }
+    const target = gateTab || 'roadmap';
+    setGateTab(null);
+    setActiveTab(target);
+  };
+
+  // If a code was switched off since the last visit, drop back to the website.
+  useEffect(() => {
+    const stored = getStoredAccess();
+    if (!stored) return;
+    verifyAccess(stored.code).catch((err) => {
+      if (err.status === 401) { clearAccess(); setActiveTabState('landing'); }
+    });
+  }, []);
+  useEffect(() => { saveStored(THEME_KEY, projectTheme); }, [projectTheme]);
 
   const [savedAssets, setSavedAssets] = useState({
     researchBrief: null,
@@ -189,23 +243,11 @@ function App() {
   }, []);
 
   const handleToggleHour = (hourNum) => {
-    setCompletedHours(prev => {
-      let updated;
-      if (prev.includes(hourNum)) {
-        updated = prev.filter(h => h !== hourNum);
-      } else {
-        updated = [...prev, hourNum].sort((a, b) => a - b);
-      }
-      fetch('/api/user/progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          hour: hourNum,
-          completed: updated.includes(hourNum)
-        })
-      }).catch(() => {});
-      return updated;
-    });
+    setCompletedHours((prev) => (
+      prev.includes(hourNum)
+        ? prev.filter((h) => h !== hourNum)
+        : [...prev, hourNum].sort((x, y) => x - y)
+    ));
   };
 
   const handleSaveAsset = (key, data) => {
@@ -215,31 +257,11 @@ function App() {
     }));
   };
 
-  const toggleUserRole = () => {
-    if (userProfile.role.includes("Student") || userProfile.role.includes("Innovator")) {
-      setUserProfile({
-        name: "Dr. Vikram Rao",
-        email: "vikram.rao@isro.gov.in",
-        role: "ISRO Senior Scientist & Creator Mentor",
-        school: "National Space & AI Innovation Lab, Bengaluru",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
-      });
-    } else {
-      setUserProfile({
-        name: "Aarav Sharma",
-        email: "aarav.sharma@atl.gov.in",
-        role: "ATL Student Innovator (Grade 8)",
-        school: "Kendriya Vidyalaya / Bengaluru Public School",
-        avatar: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=150&auto=format&fit=crop&q=80"
-      });
-    }
-  };
-
   return (
     <>
       {activeTab === 'landing' ? (
         <KreomaxLandingPage 
-          onLaunchStudio={(targetTab) => setActiveTab(targetTab || 'roadmap')}
+          onLaunchStudio={requestStudio}
           onOpenKeyModal={() => setShowKeyModal(true)}
         />
       ) : (
@@ -252,43 +274,30 @@ function App() {
             />
           )}
 
-          {/* LEFT PANE: Mission & Course Control Navigator */}
-          <LeftPaneNav 
+          <Sidebar
             activeTab={activeTab}
-            setActiveTab={(tab) => {
-              setActiveTab(tab);
-              setIsMobileNavOpen(false);
-            }}
+            setActiveTab={(tab) => { setActiveTab(tab); setIsMobileNavOpen(false); }}
             modules={modules}
             completedHours={completedHours}
             onToggleHour={handleToggleHour}
             projectTheme={projectTheme}
-            setProjectTheme={setProjectTheme}
             userProfile={userProfile}
-            setUserProfile={setUserProfile}
             gatewayStatus={gatewayStatus}
             onOpenKeyModal={() => setShowKeyModal(true)}
             isMobileOpen={isMobileNavOpen}
             setIsMobileOpen={setIsMobileNavOpen}
-            onOpenTrainerGuide={() => setShowTrainerGuide(true)}
             onOpenThemeModal={() => setShowThemeModal(true)}
+            onEditProfile={() => setEditingProfile(true)}
+            onLeaveStudio={leaveStudio}
           />
 
-          {/* RIGHT PANE: Interactive Creative Studio Workspace */}
           <div className="ca-workspace-pane">
-            {/* Workspace Topbar with Breadcrumbs, Indian Mission badge, & Quick Nav */}
-            <WorkspaceTopBar 
+            <TopBar
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               modules={modules}
-              projectTheme={projectTheme}
-              onOpenKeyModal={() => setShowKeyModal(true)}
-              gatewayStatus={gatewayStatus}
               onOpenMobileNav={() => setIsMobileNavOpen(true)}
-              userProfile={userProfile}
-              onToggleRole={toggleUserRole}
               onOpenTrainerGuide={() => setShowTrainerGuide(true)}
-              onOpenThemeModal={() => setShowThemeModal(true)}
             />
 
             {/* Studio Canvas Router */}
@@ -353,6 +362,7 @@ function App() {
               {activeTab === 'web-builder' && (
                 <WebBuilderStudio 
                   projectTheme={projectTheme}
+                  userProfile={userProfile}
                   onSaveAsset={handleSaveAsset}
                   onNavigateNext={() => setActiveTab('capstone')}
                 />
@@ -379,6 +389,19 @@ function App() {
         onClose={() => setShowKeyModal(false)}
         gatewayStatus={gatewayStatus}
         onKeysSaved={(tools) => setGatewayStatus(tools)}
+      />
+
+      {/* Access code dialog: shown when someone without a code tries to open the studio */}
+      <AccessGate isOpen={gateTab !== null} onClose={() => setGateTab(null)} onGranted={onAccessGranted} />
+
+      {/* First-run welcome / edit profile */}
+      <ProfileModal
+        isOpen={activeTab !== 'landing' && (!profile || editingProfile)}
+        initial={profile}
+        canDismiss={Boolean(profile)}
+        onSave={(p) => { setProfile(p); saveStored(PROFILE_KEY, p); setEditingProfile(false); }}
+        onSkip={() => { const p = { name: 'Creator', skipped: true }; setProfile(p); saveStored(PROFILE_KEY, p); }}
+        onClose={() => setEditingProfile(false)}
       />
 
       {/* Assigned LMS Trainer & Mentor Guide Drawer */}

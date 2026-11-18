@@ -1,0 +1,16 @@
+.pm-backdrop { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 1rem; background: rgba(36, 28, 61, 0.5); backdrop-filter: blur(5px); }
+.pm-card { width: min(480px, 100%); background: #fff; border-radius: 22px; padding: 1.6rem; box-shadow: 0 30px 70px -20px rgba(36, 28, 61, 0.55); border: 1px solid #E7E0F5; }
+.pm-head { display: flex; gap: 14px; align-items: center; margin-bottom: 1.2rem; }
+.pm-head h2 { margin: 0; font-size: 1.25rem; }
+.pm-head p { margin: 4px 0 0; color: #6B6385; font-size: .9rem; line-height: 1.45; }
+.pm-form { display: grid; gap: 14px; }
+.pm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pm-field { display: grid; gap: 6px; font: 600 .85rem/1.2 'Inter', sans-serif; color: #433A5E; }
+.pm-field em { font-style: normal; font-weight: 500; color: #756D8E; }
+.pm-field input, .pm-field select {
+  width: 100%; padding: 10px 12px; border: 1.5px solid #D9D0EE; border-radius: 10px; font: 500 .95rem 'Inter', sans-serif; color: #241C3D; background: #fff;
+}
+.pm-field input:focus, .pm-field select:focus { outline: none; border-color: #6D4FD8; box-shadow: 0 0 0 3px rgba(109, 79, 216, .18); }
+.pm-note { margin: 0; font-size: .78rem; color: #756D8E; }
+.pm-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }
+@media (max-width: 480px) { .pm-row { grid-template-columns: 1fr; } }

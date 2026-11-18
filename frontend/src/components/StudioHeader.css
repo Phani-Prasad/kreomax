@@ -1,0 +1,17 @@
+.sh {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 18px; padding: 18px 22px; background: #fff;
+  border: 1px solid #E7E0F5; border-left: 5px solid var(--lv); border-radius: 18px; box-shadow: 0 6px 18px -12px rgba(109, 79, 216, .35);
+}
+.sh-icon { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 14px; color: var(--lv); background: color-mix(in srgb, var(--lv) 13%, white); }
+.sh-text { flex: 1; min-width: 0; }
+.sh-eyebrow { margin: 0 0 3px; font: 700 .7rem/1 'Inter', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--lv); }
+.sh-title { margin: 0; font: 800 1.45rem/1.2 'Plus Jakarta Sans', sans-serif; letter-spacing: -.02em; color: #241C3D; }
+.sh-sub { margin: 5px 0 0; color: #6B6385; font-size: .92rem; line-height: 1.5; max-width: 62ch; }
+.sh-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; flex: none; }
+.sh-art { flex: none; width: 150px; height: auto; border-radius: 14px; margin: -6px -6px -6px 0; }
+@media (max-width: 760px) {
+  .sh { flex-wrap: wrap; padding: 16px; }
+  .sh-text { flex-basis: calc(100% - 70px); }
+  .sh-actions { width: 100%; }
+  .sh-art { display: none; }
+}

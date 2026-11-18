@@ -27,9 +27,9 @@
   gap: 1.5rem;
   padding: 1rem 1.5rem;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 12px;
-  box-shadow: 0 2px 10px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 10px -2px rgba(36, 28, 61, 0.04);
 }
 
 .ca-roadmap-hero-main {
@@ -48,7 +48,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: #3730A3;
+  color: #4A31A8;
   margin-bottom: 0.5rem;
 }
 
@@ -56,14 +56,14 @@
   margin: 0 0 0.35rem 0;
   font-size: 1.625rem;
   font-weight: 800;
-  color: #0F172A;
+  color: #241C3D;
   letter-spacing: -0.02em;
 }
 
 .ca-roadmap-subtitle {
   margin: 0 0 0.85rem 0;
   font-size: 0.875rem;
-  color: #334155;
+  color: #433A5E;
   line-height: 1.5;
   max-width: 640px;
 }
@@ -73,8 +73,8 @@
   align-items: center;
   gap: 0.65rem;
   padding: 0.4rem 0.95rem;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #F8F5FF;
+  border: 1px solid #E7E0F5;
   border-radius: 8px;
 }
 
@@ -82,14 +82,14 @@
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #64748B;
+  color: #6B6385;
   letter-spacing: 0.04em;
 }
 
 .ca-theme-value {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #0F172A;
+  color: #241C3D;
 }
 
 .ca-theme-change-pill {
@@ -98,11 +98,11 @@
   gap: 0.35rem;
   padding: 0.25rem 0.65rem;
   background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D9D0EE;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #4F46E5;
+  color: #6D4FD8;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -118,8 +118,8 @@
   align-items: center;
   gap: 1.25rem;
   padding: 0.85rem 1.25rem;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #F8F5FF;
+  border: 1px solid #E7E0F5;
   border-radius: 12px;
 }
 
@@ -130,20 +130,20 @@
 .ca-stat-num {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #0F172A;
+  color: #241C3D;
   line-height: 1.1;
 }
 
 .ca-stat-max {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #64748B;
+  color: #6B6385;
 }
 
 .ca-stat-lbl {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #64748B;
+  color: #6B6385;
   margin-top: 0.2rem;
   white-space: nowrap;
 }
@@ -151,7 +151,7 @@
 .ca-stat-divider {
   width: 1px;
   height: 32px;
-  background: #E2E8F0;
+  background: #E7E0F5;
 }
 
 .ca-roadmap-view-toggle {
@@ -167,24 +167,24 @@
   gap: 0.45rem;
   padding: 0.4rem 0.8rem;
   background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D9D0EE;
   border-radius: 6px;
   font-size: 0.78rem;
   font-weight: 600;
-  color: #334155;
+  color: #433A5E;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
 }
 
 .ca-toggle-btn:hover {
-  background: #F1F5F9;
-  color: #0F172A;
+  background: #F1ECFB;
+  color: #241C3D;
 }
 
 .ca-toggle-btn.active {
-  background: #4F46E5;
-  border-color: #4F46E5;
+  background: #6D4FD8;
+  border-color: #6D4FD8;
   color: #FFFFFF;
 }
 
@@ -197,9 +197,9 @@
   gap: 0.65rem;
   padding: 0.75rem 1.25rem;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 12px;
-  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px -2px rgba(36, 28, 61, 0.04);
 }
 
 .ca-ribbon-info {
@@ -215,7 +215,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.84rem;
-  color: #334155;
+  color: #433A5E;
 }
 
 .ca-ribbon-actions {
@@ -257,9 +257,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.6rem 0.35rem;
-  background: #F8FAFC;
+  background: #F8F5FF;
   border-radius: 12px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
 }
 
 .ca-beads-progress-fill {
@@ -267,7 +267,7 @@
   top: 50%;
   left: 12px;
   height: 4px;
-  background: linear-gradient(90deg, #059669, #4F46E5, #7C3AED, #E11D48);
+  background: linear-gradient(90deg, #059669, #6D4FD8, #7C3AED, #E11D48);
   transform: translateY(-50%);
   border-radius: 9999px;
   z-index: 1;
@@ -281,7 +281,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 2px solid #CBD5E1;
+  border: 2px solid #D9D0EE;
   background: #FFFFFF;
   display: flex;
   align-items: center;
@@ -353,10 +353,10 @@
 .ca-station-card {
   position: relative;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 10px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 10px -2px rgba(36, 28, 61, 0.04);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
@@ -364,13 +364,13 @@
 
 .ca-station-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.09);
+  box-shadow: 0 8px 20px -4px rgba(36, 28, 61, 0.09);
   border-color: var(--station-border);
 }
 
 .ca-station-card.is-current {
   border-color: var(--station-color);
-  box-shadow: 0 0 0 2px var(--station-border), 0 6px 16px -4px rgba(15, 23, 42, 0.07);
+  box-shadow: 0 0 0 2px var(--station-border), 0 6px 16px -4px rgba(36, 28, 61, 0.07);
 }
 
 /* Station Top Header */
@@ -379,7 +379,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.55rem 0.85rem;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #F1ECFB;
   background: #FAFAFA;
 }
 
@@ -399,7 +399,7 @@
 .ca-station-tool-pill {
   padding: 0.15rem 0.55rem;
   background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D9D0EE;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 700;
@@ -425,21 +425,21 @@
 
 .ca-status-chip.current {
   background: #EEF2FF;
-  color: #4F46E5;
+  color: #6D4FD8;
   border: 1px solid #C7D2FE;
 }
 
 .ca-status-chip.pending {
   background: #FFFFFF;
-  color: #64748B;
-  border: 1px solid #E2E8F0;
+  color: #6B6385;
+  border: 1px solid #E7E0F5;
 }
 
 .ca-live-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #4F46E5;
+  background: #6D4FD8;
   animation: pulseDot 1.5s infinite;
 }
 
@@ -449,9 +449,9 @@
   height: 135px;
   cursor: pointer;
   overflow: hidden;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #F1ECFB;
   display: flex;
-  background: #0F172A;
+  background: #241C3D;
 }
 
 /* Professional Hero Image with subtle hover zoom */
@@ -459,14 +459,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: contrast(1.06) saturate(1.12) brightness(1.02);
+  object-position: 50% 22%;
+  filter: none;
   display: block;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease;
 }
 
 .ca-station-artwork.bright-power-banner:hover .ca-power-hero-img {
   transform: scale(1.04);
-  filter: contrast(1.1) saturate(1.18) brightness(1.06);
+  filter: brightness(1.03);
 }
 
 .ca-power-gradient-overlay {
@@ -515,7 +516,7 @@
   align-items: center;
   gap: 5px;
   padding: 4px 10px;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(36, 28, 61, 0.85);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 9999px;
@@ -529,7 +530,7 @@
 .ca-station-hover-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(36, 28, 61, 0.65);
   backdrop-filter: blur(2px);
   color: #FFFFFF;
   display: flex;
@@ -558,13 +559,13 @@
 }
 
 .ca-trophy-label {
-  color: #64748B;
+  color: #6B6385;
   font-weight: 600;
   font-size: 0.72rem;
 }
 
 .ca-trophy-title {
-  color: #0F172A;
+  color: #241C3D;
   font-weight: 800;
   font-size: 0.78rem;
 }
@@ -581,18 +582,18 @@
   margin: 0;
   font-size: 1.0625rem;
   font-weight: 800;
-  color: #0F172A;
+  color: #241C3D;
   letter-spacing: -0.015em;
 }
 
 .ca-station-hours-chip {
   padding: 0.2rem 0.55rem;
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
+  background: #F1ECFB;
+  border: 1px solid #E7E0F5;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #334155;
+  color: #433A5E;
   white-space: nowrap;
 }
 
@@ -602,8 +603,8 @@
   align-items: center;
   gap: 0.45rem;
   font-size: 0.8125rem;
-  color: #334155;
-  background: #F8FAFC;
+  color: #433A5E;
+  background: #F8F5FF;
   padding: 0.35rem 0.65rem;
   border-radius: 6px;
   border-left: 3px solid var(--station-color);
@@ -619,7 +620,7 @@
 }
 
 .ca-deliv-text strong {
-  color: #0F172A;
+  color: #241C3D;
   font-weight: 700;
 }
 
@@ -637,12 +638,12 @@
   justify-content: center;
   gap: 0.3rem;
   padding: 0.35rem 0.4rem;
-  background: #F8FAFC;
-  border: 1px solid #CBD5E1;
+  background: #F8F5FF;
+  border: 1px solid #D9D0EE;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #334155;
+  color: #433A5E;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
@@ -650,8 +651,8 @@
 }
 
 .ca-mini-step-pill:hover {
-  background: #F1F5F9;
-  border-color: #94A3B8;
+  background: #F1ECFB;
+  border-color: #9D95B5;
 }
 
 .ca-mini-step-pill.checked {
@@ -703,7 +704,7 @@
   align-items: center;
   gap: 1.25rem;
   padding: 0.85rem 1.25rem;
-  background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+  background: linear-gradient(135deg, #F8F5FF 0%, #EEF2FF 100%);
   border: 1px solid #C7D2FE;
   border-radius: 12px;
   box-shadow: 0 2px 10px -2px rgba(37, 99, 235, 0.06);
@@ -729,7 +730,7 @@
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.05em;
-  color: #4F46E5;
+  color: #6D4FD8;
   margin-bottom: 0.25rem;
 }
 
@@ -737,13 +738,13 @@
   margin: 0 0 0.35rem 0;
   font-size: 1.25rem;
   font-weight: 800;
-  color: #0F172A;
+  color: #241C3D;
 }
 
 .ca-vault-desc {
   margin: 0;
   font-size: 0.875rem;
-  color: #334155;
+  color: #433A5E;
   line-height: 1.5;
   max-width: 800px;
 }

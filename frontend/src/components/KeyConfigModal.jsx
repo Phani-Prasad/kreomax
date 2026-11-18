@@ -21,6 +21,7 @@ export function KeyConfigModal({
   const [keysInput, setKeysInput] = useState({ gemini: '', openai: '', elevenlabs: '' });
   const [savingKey, setSavingKey] = useState(false);
   const [keyFeedback, setKeyFeedback] = useState(null);
+  const [adminToken, setAdminToken] = useState('');
 
   if (!isOpen) return null;
 
@@ -31,7 +32,7 @@ export function KeyConfigModal({
     try {
       const resp = await fetch('/api/ai/gateway/save-keys', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Token': adminToken },
         body: JSON.stringify(keysInput)
       });
       const data = await resp.json();
@@ -44,7 +45,7 @@ export function KeyConfigModal({
           setKeyFeedback(null);
         }, 1600);
       } else {
-        setKeyFeedback({ type: 'error', message: data.error || 'Failed to save gateway keys' });
+        setKeyFeedback({ type: 'error', message: resp.status === 401 ? 'Invalid admin token.' : resp.status === 503 ? 'Admin access is not configured on the server.' : (data.detail || data.error || 'Failed to save gateway keys') });
       }
     } catch (err) {
       setSavingKey(false);
@@ -71,7 +72,7 @@ export function KeyConfigModal({
         <div className="ca-key-info-banner">
           <ShieldCheck size={16} className="text-emerald flex-shrink-0" />
           <p>
-            <strong>Zero Student Logins:</strong> Keys entered here power Google NotebookLM, ChatGPT, Gemini, and ElevenLabs voices right inside the LMS!
+            <strong>Admin only:</strong> Keys entered here power the writing, research, image and voice features for every student in the workspace.
           </p>
         </div>
 
@@ -98,6 +99,23 @@ export function KeyConfigModal({
         </div>
 
         <form onSubmit={handleSaveKeys} className="ca-key-form">
+          <div className="ca-key-field">
+            <label className="ca-key-label" htmlFor="ca-admin-token">
+              <span>Admin Token (required to save keys)</span>
+            </label>
+            <div className="ca-key-input-wrap">
+              <input
+                id="ca-admin-token"
+                type="password"
+                className="ca-key-input"
+                autoComplete="off"
+                placeholder="ADMIN_API_TOKEN from the server"
+                value={adminToken}
+                onChange={(e) => setAdminToken(e.target.value)}
+                required
+              />
+            </div>
+          </div>
           <div className="ca-key-field">
             <label className="ca-key-label">
               <span>Google Gemini API Key (Free)</span>

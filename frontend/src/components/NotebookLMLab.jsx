@@ -17,6 +17,7 @@ import {
   X
 } from 'lucide-react';
 import './NotebookLMLab.css';
+import { StudioHeader } from './StudioHeader';
 
 export function NotebookLMLab({ 
   projectTheme, 
@@ -28,7 +29,7 @@ export function NotebookLMLab({
     "🚀 Mission Chandrayaan 2085: Secret of the Lunar Water Vault": [
       {
         id: 1,
-        title: "Doc 1: ISRO Lunar Base & Pragyan-X Rover",
+        title: "Doc 1: Lunar Base & Pragyan-X Rover",
         content: "Chandrayaan Station Alpha is located at the Moon's South Pole crater Malapert. Temperatures plunge to -200°C. Pragyan-X rovers navigate hazardous terrain using AI optical sensors. Massive water-ice reserves in Shackleton Crater supply oxygen to the crew domes.",
         citations: [
           { query: "How does Pragyan-X rover navigate?", answer: "Pragyan-X rovers navigate hazardous terrain using AI optical sensors." },
@@ -38,9 +39,9 @@ export function NotebookLMLab({
       {
         id: 2,
         title: "Doc 2: Lunar Solar Sails & Telemetry",
-        content: "Telemetry relays bounce off the Chandrayaan orbiter satellite network directly to ISRO ISTRAC in Bengaluru. Massive solar arrays positioned on high crater peaks capture perpetual sunlight, generating 100 Megawatts of clean power.",
+        content: "Telemetry relays bounce off the Chandrayaan orbiter satellite network directly to Mission Control. Massive solar arrays positioned on high crater peaks capture perpetual sunlight, generating 100 Megawatts of clean power.",
         citations: [
-          { query: "Where is telemetry sent?", answer: "Telemetry relays bounce off Chandrayaan orbiters directly to ISRO ISTRAC in Bengaluru." },
+          { query: "Where is telemetry sent?", answer: "Telemetry relays bounce off Chandrayaan orbiters directly to Mission Control." },
           { query: "How is power generated?", answer: "Massive solar arrays on crater peaks capture perpetual sunlight, generating 100 Megawatts." }
         ]
       }
@@ -112,7 +113,7 @@ export function NotebookLMLab({
   const [chatMessages, setChatMessages] = useState([
     {
       sender: 'ai',
-      text: "Hello Aarav! I am your embedded NotebookLM assistant. I have ingested your mission notes. Ask me any question, and I will cite exact proof directly from your notes.",
+      text: "Hello! I am your embedded research assistant. I have ingested your mission notes. Ask me any question, and I will cite exact proof directly from your notes.",
       citation: null
     }
   ]);
@@ -130,7 +131,7 @@ export function NotebookLMLab({
     if (!audioVoiceUrl) {
       setIsVoiceLoading(true);
       try {
-        const text = `Aarav here, alongside Ananya and Dr. Vikram Rao from ISRO! In today's young creator deep dive for ${projectTheme}, we are analyzing our verified mission notes. According to our official research records, Pragyan-X rovers use AI optical sensors to navigate craters at minus 200 degrees Celsius!`;
+        const text = `Welcome to the Kreomax research podcast! In today's young creator deep dive for ${projectTheme}, we are analyzing our verified mission notes. According to our official research records, Pragyan-X rovers use AI optical sensors to navigate craters at minus 200 degrees Celsius!`;
         const resp = await fetch('/api/ai/elevenlabs-voice', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -204,7 +205,7 @@ export function NotebookLMLab({
           sender: 'ai',
           text: data.answer,
           citation: data.citation,
-          sourceBadge: data.source === 'gemini-1.5-flash' ? 'Google Gemini' : 'Grounded RAG'
+          sourceBadge: data.source === 'gemini-1.5-flash' ? 'Kreomax AI' : 'Grounded RAG'
         }]);
 
         if (data.citation && data.citation.text) {
@@ -228,7 +229,7 @@ export function NotebookLMLab({
 
   const handleDownloadResearch = () => {
     const content = `# MISSION RESEARCH & WORLD BRIEF
-**Kreomax - Level 2: Google NotebookLM**
+**Kreomax - Level 2: Research Lab**
 **Mission Theme**: ${projectTheme}
 **Date**: ${new Date().toLocaleDateString()}
 
@@ -236,7 +237,7 @@ export function NotebookLMLab({
 ${sources.map(s => `### ${s.title}\n${s.content}\n`).join('\n')}
 
 ---
-*Ready for Level 3: Concept Art Studio with Midjourney & Imagen 3!*
+*Ready for Level 3: Concept Art Studio!*
 `;
     const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
     saveAs(blob, `${projectTheme.replace(/\s+/g, '_')}_Research_Guide.md`);
@@ -245,24 +246,17 @@ ${sources.map(s => `### ${s.title}\n${s.content}\n`).join('\n')}
 
   return (
     <div className="ca-notebook-lab-clean">
-      {/* Studio Header */}
-      <div className="ca-lab-header">
-        <div className="ca-lab-header-left">
-          <span className="ca-lab-badge">LEVEL 2 · NOTEBOOKLM</span>
-          <h2 className="ca-lab-title">Research</h2>
-        </div>
-
-        <div className="ca-lab-actions">
-          <button className="btn-secondary btn-sm" onClick={handleDownloadResearch}>
-            <Download size={13} />
-            <span>Export</span>
-          </button>
-          <button className="btn-primary btn-sm" onClick={onNavigateNext}>
-            <span>Level 3</span>
-            <ArrowRight size={13} />
-          </button>
-        </div>
-      </div>
+      <StudioHeader
+        level={2}
+        title="Research"
+        subtitle="Check facts against your sources and cite the proof."
+        actions={(
+          <>
+            <button className="btn-secondary btn-sm" onClick={handleDownloadResearch}><Download size={13} /><span>Export</span></button>
+            <button className="btn-primary btn-sm" onClick={onNavigateNext}><span>Next: Level 3</span><ArrowRight size={13} /></button>
+          </>
+        )}
+      />
 
       {/* 2-Column Split Studio */}
       <div className="ca-lab-grid">
@@ -312,7 +306,7 @@ ${sources.map(s => `### ${s.title}\n${s.content}\n`).join('\n')}
             <Headphones size={15} style={{ color: '#A78BFA', flexShrink: 0 }} />
             <div className="ca-pod-header">
               <div className="ca-pod-title">AI Podcast Briefing</div>
-              <div className="ca-pod-sub">Aarav & Dr. Vikram · ElevenLabs</div>
+              <div className="ca-pod-sub">Two AI voices</div>
             </div>
 
             <audio ref={audioRef} onEnded={() => setIsPlayingPodcast(false)} style={{ display: 'none' }} />
@@ -410,7 +404,7 @@ ${sources.map(s => `### ${s.title}\n${s.content}\n`).join('\n')}
           >
             <input 
               type="text" 
-              placeholder="Ask NotebookLM a question about your mission notes..."
+              placeholder="Ask a question about your mission notes..."
               className="ca-input-field"
               value={userQuery}
               onChange={(e) => setUserQuery(e.target.value)}
@@ -449,7 +443,7 @@ ${sources.map(s => `### ${s.title}\n${s.content}\n`).join('\n')}
                   rows={4} 
                   value={newContent} 
                   onChange={e => setNewContent(e.target.value)} 
-                  placeholder="Paste verified facts to ground NotebookLM..." 
+                  placeholder="Paste verified facts to ground your research..." 
                   required 
                 />
               </div>

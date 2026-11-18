@@ -1,3 +1,4 @@
+import { skillsForLevel } from '../data/skills';
 import React from 'react';
 import { 
   Sparkles, 
@@ -19,7 +20,7 @@ const LEVELS = [
     id: "m1",
     number: 1,
     title: "Story Writing",
-    tool: "ChatGPT",
+    tool: "Story Studio",
     completionTitle: "AI Story Creator",
     color: "#059669",
     studioType: "story",
@@ -29,9 +30,9 @@ const LEVELS = [
     id: "m2",
     number: 2,
     title: "Research",
-    tool: "NotebookLM",
+    tool: "Research Lab",
     completionTitle: "AI Researcher",
-    color: "#4F46E5",
+    color: "#6D4FD8",
     studioType: "notebooklm",
     icon: BookOpen
   },
@@ -39,7 +40,7 @@ const LEVELS = [
     id: "m3",
     number: 3,
     title: "Images & Art",
-    tool: "Midjourney",
+    tool: "Visual Studio",
     completionTitle: "Digital Artist",
     color: "#7C3AED",
     studioType: "visual",
@@ -49,7 +50,7 @@ const LEVELS = [
     id: "m4",
     number: 4,
     title: "Video & Animation",
-    tool: "Google Veo",
+    tool: "Motion Studio",
     completionTitle: "AI Animator",
     color: "#DB2777",
     studioType: "motion",
@@ -114,6 +115,7 @@ export function CurriculumView({
             </button>
           </div>
         </div>
+        <img className="ca-spot ca-spot--hero ca-spot--photo" src="/images/mascot-wave.webp" alt="" width="640" height="576" loading="lazy" decoding="async" />
 
         <div className="ca-hero-action-box">
           {onSwitchToRoadmap && (
@@ -193,6 +195,13 @@ export function CurriculumView({
                     {isDone ? 'Title Earned: ' : 'Unlock Title: '}
                     <strong>{level.completionTitle}</strong>
                   </span>
+                </div>
+
+                {/* Thinking skills practised in this level */}
+                <div className="ca-skill-chips" aria-label="Thinking skills practised in this level">
+                  {skillsForLevel(level.number).map((sk) => (
+                    <span key={sk.id} className="ca-skill-chip" style={{ '--sk-color': sk.color }}>{sk.short}</span>
+                  ))}
                 </div>
 
                 {/* 4-Hour Curriculum Plan */}

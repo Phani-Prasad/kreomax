@@ -19,8 +19,8 @@
   padding: 1.25rem 1.75rem;
   border-radius: 14px;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  border: 1px solid #E7E0F5;
+  box-shadow: 0 1px 3px rgba(36, 28, 61, 0.04);
 }
 
 .ca-level-tag {
@@ -34,7 +34,7 @@
   font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
   font-size: 1.5rem;
   font-weight: 800;
-  color: #0F172A;
+  color: #241C3D;
   margin: 2px 0 0 0;
 }
 
@@ -56,9 +56,9 @@
   gap: 8px;
   padding: 8px 16px;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 10px;
-  color: #64748B;
+  color: #6B6385;
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
@@ -66,27 +66,27 @@
 }
 
 .ca-simple-tab:hover {
-  color: #0F172A;
-  border-color: #CBD5E1;
+  color: #241C3D;
+  border-color: #D9D0EE;
 }
 
 .ca-simple-tab.active {
   background: #EEF2FF;
   border-color: #C7D2FE;
-  color: #4338CA;
+  color: #5B3FC4;
   font-weight: 700;
 }
 
 /* Hero Card */
 .ca-hero-simple-card {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 14px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 3px rgba(36, 28, 61, 0.04);
 }
 
 .ca-presets-row {
@@ -104,10 +104,10 @@
 
 .ca-preset-pill {
   padding: 5px 13px;
-  background: #F8FAFC;
-  border: 1px solid #CBD5E1;
+  background: #F8F5FF;
+  border: 1px solid #D9D0EE;
   border-radius: 20px;
-  color: #334155;
+  color: #433A5E;
   font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
@@ -117,7 +117,7 @@
 .ca-preset-pill:hover {
   background: #EEF2FF;
   border-color: #C7D2FE;
-  color: #4338CA;
+  color: #5B3FC4;
 }
 
 .ca-form-simple-grid {
@@ -135,22 +135,22 @@
 .ca-input-group label {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #334155;
+  color: #433A5E;
 }
 
 .ca-input-group input {
   padding: 9px 12px;
   background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D9D0EE;
   border-radius: 8px;
-  color: #0F172A;
+  color: #241C3D;
   font-size: 0.86rem;
   outline: none;
   transition: border-color 0.15s ease;
 }
 
 .ca-input-group input:focus {
-  border-color: #4F46E5;
+  border-color: #6D4FD8;
 }
 
 .ca-generate-bar {
@@ -168,13 +168,13 @@
 
 .ca-scene-simple-card {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 14px;
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 3px rgba(36, 28, 61, 0.04);
 }
 
 .ca-scene-header-simple {
@@ -194,8 +194,8 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #F1F5F9;
-  border: 1px solid #CBD5E1;
+  background: #F1ECFB;
+  border: 1px solid #D9D0EE;
   border-radius: 6px;
   padding: 3px 8px;
   font-size: 0.75rem;
@@ -204,23 +204,23 @@
 }
 
 .ca-copy-btn-simple:hover {
-  background: #E2E8F0;
-  color: #0F172A;
+  background: #E7E0F5;
+  color: #241C3D;
 }
 
 .ca-scene-title-input {
   font-size: 0.94rem;
   font-weight: 700;
-  color: #0F172A;
+  color: #241C3D;
   background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D9D0EE;
   border-radius: 7px;
   padding: 6px 10px;
   outline: none;
 }
 
 .ca-scene-title-input:focus {
-  border-color: #4F46E5;
+  border-color: #6D4FD8;
 }
 
 .ca-scene-block {
@@ -238,8 +238,8 @@
 .ca-scene-block textarea,
 .ca-scene-block input {
   padding: 8px 10px;
-  background: #F8FAFC;
-  border: 1px solid #CBD5E1;
+  background: #F8F5FF;
+  border: 1px solid #D9D0EE;
   border-radius: 7px;
   color: #1E293B;
   font-size: 0.875rem;
@@ -250,18 +250,18 @@
 
 .ca-scene-block textarea:focus,
 .ca-scene-block input:focus {
-  border-color: #4F46E5;
+  border-color: #6D4FD8;
   background: #FFFFFF;
 }
 
 .ca-theme-mini-btn {
-  background: #F1F5F9;
-  border: 1px solid #CBD5E1;
+  background: #F1ECFB;
+  border: 1px solid #D9D0EE;
   border-radius: 6px;
   padding: 3px 8px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #4F46E5;
+  color: #6D4FD8;
   cursor: pointer;
   transition: all 0.15s ease;
 }

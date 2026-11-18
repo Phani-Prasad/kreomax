@@ -18,8 +18,8 @@ export const KreomaxIcon = ({ size = 32, className = '' }) => {
       <defs>
         {/* Shield Gradient */}
         <linearGradient id="km-bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#4338CA" />
-          <stop offset="45%" stopColor="#6366F1" />
+          <stop offset="0%" stopColor="#5B3FC4" />
+          <stop offset="45%" stopColor="#8B73E8" />
           <stop offset="100%" stopColor="#7C3AED" />
         </linearGradient>
 
@@ -43,7 +43,7 @@ export const KreomaxIcon = ({ size = 32, className = '' }) => {
 
         {/* Glow Filter */}
         <filter id="km-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#4F46E5" floodOpacity="0.3" />
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#6D4FD8" floodOpacity="0.3" />
         </filter>
       </defs>
 

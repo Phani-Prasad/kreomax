@@ -6,7 +6,7 @@
 .ca-key-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(36, 28, 61, 0.45);
   backdrop-filter: blur(4px);
   z-index: 999;
   display: flex;
@@ -20,10 +20,10 @@
   width: 100%;
   max-width: 540px;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 18px;
   padding: 1.75rem;
-  box-shadow: 0 20px 45px -8px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 20px 45px -8px rgba(36, 28, 61, 0.15);
 }
 
 .ca-key-modal-header {
@@ -37,7 +37,7 @@
   font-family: var(--font-display, 'Outfit', sans-serif);
   font-size: 1.15rem;
   font-weight: 700;
-  color: #0F172A;
+  color: #241C3D;
 }
 
 .ca-key-sub {
@@ -46,17 +46,17 @@
 }
 
 .ca-key-close-btn {
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
-  color: #64748B;
+  background: #F1ECFB;
+  border: 1px solid #E7E0F5;
+  color: #6B6385;
   cursor: pointer;
   padding: 6px;
   border-radius: 8px;
   transition: all 0.15s ease;
 }
 .ca-key-close-btn:hover {
-  background: #E2E8F0;
-  color: #0F172A;
+  background: #E7E0F5;
+  color: #241C3D;
 }
 
 .ca-key-info-banner {
@@ -68,7 +68,7 @@
   border-radius: 12px;
   padding: 0.75rem 0.95rem;
   font-size: 0.76rem;
-  color: #4338CA;
+  color: #5B3FC4;
   margin-bottom: 1.1rem;
   line-height: 1.45;
 }
@@ -78,8 +78,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #F8F5FF;
+  border: 1px solid #E7E0F5;
   border-radius: 10px;
   padding: 0.6rem 0.85rem;
   margin-bottom: 1.25rem;
@@ -138,7 +138,7 @@
 
 .ca-key-link {
   font-size: 0.75rem;
-  color: #4F46E5;
+  color: #6D4FD8;
   text-decoration: none;
   font-weight: 600;
 }
@@ -156,15 +156,15 @@
   width: 100%;
   padding: 8px 36px 8px 12px;
   background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D9D0EE;
   border-radius: 9px;
-  color: #0F172A;
+  color: #241C3D;
   font-family: var(--font-mono);
   font-size: 0.78rem;
   outline: none;
 }
 .ca-key-input:focus {
-  border-color: #4F46E5;
+  border-color: #6D4FD8;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
@@ -173,7 +173,7 @@
   right: 8px;
   background: transparent;
   border: none;
-  color: #64748B;
+  color: #6B6385;
   cursor: pointer;
   padding: 4px;
 }
@@ -185,5 +185,5 @@
   gap: 8px;
   margin-top: 1.25rem;
   padding-top: 1rem;
-  border-top: 1px solid #F1F5F9;
+  border-top: 1px solid #F1ECFB;
 }

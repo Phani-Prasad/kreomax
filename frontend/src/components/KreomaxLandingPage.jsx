@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { KreomaxIcon } from './KreomaxLogo';
-import { PaymentModal } from './PaymentModal';
+import { ApplyModal } from './ApplyModal';
+import { GameMap } from './GameMap';
+import { HeroCarousel } from './HeroCarousel';
+import { AskBuddySection } from './AskBuddy';
+import { whatsappLink } from '../data/contact';
+import { SkillRadarSection } from './SkillRadar';
+import { skillsForLevel } from '../data/skills';
 import {
   BookOpen,
   Cpu,
@@ -10,14 +16,15 @@ import {
   Award,
   ArrowRight,
   Sparkles,
-  Play,
-  ChevronRight,
-  ChevronLeft,
+
+  CheckCircle2,
+  Coffee,
+  DoorOpen,
+  Images,
   Zap,
   Star,
   Menu,
   X,
-  CreditCard,
   MapPin,
   MessageCircle,
   Phone
@@ -31,7 +38,7 @@ const STUDIOS = [
     level: 1,
     name: 'Story Studio',
     tagline: 'Write your cinematic screenplay',
-    engine: 'ChatGPT',
+    engine: 'AI Writing',
     icon: BookOpen,
     color: '#059669',
     glow: 'rgba(5,150,105,0.35)',
@@ -43,10 +50,10 @@ const STUDIOS = [
     level: 2,
     name: 'Research Lab',
     tagline: 'Verify facts with AI citations',
-    engine: 'NotebookLM',
+    engine: 'AI Research',
     icon: Cpu,
-    color: '#4F46E5',
-    glow: 'rgba(79,70,229,0.35)',
+    color: '#6D4FD8',
+    glow: 'rgba(109, 79, 216,0.35)',
     output: 'Research Guide',
     preview: 'Verified Fact · Source: NASA LRO 2024\n"Moon\'s south pole holds ~600M tons\nof water ice for rocket propellant."'
   },
@@ -55,19 +62,19 @@ const STUDIOS = [
     level: 3,
     name: 'Visual Studio',
     tagline: 'Generate cinematic concept art',
-    engine: 'Midjourney',
+    engine: 'AI Art',
     icon: ImageIcon,
     color: '#7C3AED',
     glow: 'rgba(124,58,237,0.35)',
     output: 'Concept Art Pack',
-    preview: 'Cinematic 16:9 · Astronaut on Shackleton Rim\nStyle: Unreal Engine 5\nAnamorphic lens flare · 8K render'
+    preview: 'Cinematic 16:9 · Astronaut on Shackleton Rim\nStyle: cinematic 3D render\nAnamorphic lens flare · 8K render'
   },
   {
     id: 'motion',
     level: 4,
     name: 'Motion Studio',
     tagline: 'Animate scenes into trailers',
-    engine: 'Google Veo',
+    engine: 'AI Video',
     icon: Video,
     color: '#DB2777',
     glow: 'rgba(219,39,119,0.35)',
@@ -96,7 +103,7 @@ const STUDIOS = [
     color: '#0284C7',
     glow: 'rgba(2,132,199,0.35)',
     output: 'Portfolio + Certificate',
-    preview: 'Story · Research · Art\nTrailer · Website bundled\n100-point rubric evaluation\nATL Certified · Score: 98/100'
+    preview: 'Story · Research · Art\nTrailer · Website bundled\n100-point rubric evaluation\nCertified · Score: 98/100'
   }
 ];
 
@@ -104,28 +111,28 @@ const STUDIOS = [
 const STUDENT_PROJECTS = [
   {
     title: 'Chandrayaan Space Odyssey',
-    student: 'Grade 8 · Space Sciences Track',
-    cohort: 'ATL Innovation Cohort',
-    coverImg: 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=800&auto=format&fit=crop&q=80',
-    score: '98/100',
-    color: '#4F46E5',
+    student: 'Space & science theme',
+    cohort: 'Sample project',
+    coverImg: '/images/level-1-story.webp',
+    score: 'Sample',
+    color: '#6D4FD8',
     tags: ['Screenplay', 'Research', 'Concept Art', 'Trailer', 'Website']
   },
   {
     title: 'Cyber Mecha Titans 2050',
-    student: 'Grade 9 · AI & Robotics Track',
-    cohort: 'Mechatronics Cohort',
-    coverImg: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&auto=format&fit=crop&q=80',
-    score: '100/100',
+    student: 'Robotics & sci-fi theme',
+    cohort: 'Sample project',
+    coverImg: '/images/level-4-motion.webp',
+    score: 'Sample',
     color: '#7C3AED',
     tags: ['Mecha Script', 'Exo-Science', '4K Mecha Art', 'Arena Reel', 'Web Hub']
   },
   {
     title: 'Sky Dragon Chronicles',
-    student: 'Grade 8 · Digital Animation Track',
-    cohort: 'Fantasy & CGI Cohort',
-    coverImg: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop&q=80',
-    score: '97/100',
+    student: 'Fantasy & animation theme',
+    cohort: 'Sample project',
+    coverImg: '/images/level-3-visual.webp',
+    score: 'Sample',
     color: '#059669',
     tags: ['Dragon Script', 'Aerodynamics', 'Ghibli Art', 'Flight Reel', 'Showcase']
   }
@@ -133,62 +140,79 @@ const STUDENT_PROJECTS = [
 
 /* Output Pipeline Steps */
 const PIPELINE = [
-  { icon: BookOpen, label: 'Screenplay', sub: 'Your story, your world', color: '#10B981', bg: 'rgba(16,185,129,0.14)' },
-  { icon: Cpu, label: 'Research', sub: 'Fact-verified ideas', color: '#6366F1', bg: 'rgba(99,102,241,0.14)' },
-  { icon: ImageIcon, label: 'Concept Art', sub: 'Cinematic visuals', color: '#8B5CF6', bg: 'rgba(139,92,246,0.14)' },
-  { icon: Video, label: 'Video Reel', sub: '32-sec movie trailer', color: '#EC4899', bg: 'rgba(236,72,153,0.14)' },
-  { icon: Layout, label: 'Website', sub: 'Live portfolio', color: '#F59E0B', bg: 'rgba(245,158,11,0.14)' },
-  { icon: Award, label: 'Certificate', sub: 'Verified credential', color: '#38BDF8', bg: 'rgba(56,189,248,0.14)' }
+  { img: 'skill-story', label: 'Screenplay', sub: 'Your story, your world', hours: 'Hours 1-4', color: '#10B981' },
+  { img: 'skill-research', label: 'Research Guide', sub: 'Fact-checked with sources', hours: 'Hours 5-8', color: '#4C7DFF' },
+  { img: 'skill-visual', label: 'Concept Art', sub: 'One style, every scene', hours: 'Hours 9-12', color: '#8B5CF6' },
+  { img: 'skill-motion', label: 'Video Trailer', sub: '32-second movie reel', hours: 'Hours 13-16', color: '#EC4899' },
+  { img: 'skill-web', label: 'Live Website', sub: 'Your showcase page', hours: 'Hours 17-20', color: '#F59E0B' },
+  { img: 'skill-certificate', label: 'Certificate', sub: 'Graded and verified', hours: 'Hours 21-24', color: '#0EA5E9' },
 ];
 
 /* Hero Slides with Motions */
-const HERO_SLIDES = [
-  {
-    src: '/hero1.jpg',
-    badge: 'Building & Coding',
-    caption: 'Teen innovators coding and building real AI projects'
-  },
-  {
-    src: '/hero2.jpg',
-    badge: 'Storyboards & Concept Art',
-    caption: 'Creating cinematic concept art & character designs'
-  },
-  {
-    src: '/hero3.jpg',
-    badge: 'Presenting Live',
-    caption: 'Showcasing interactive AI worlds to classmates'
-  },
-  {
-    src: '/hero4.jpg',
-    badge: 'Directing & Filming',
-    caption: 'Directing movie trailers and capturing cinematic scenes'
-  }
+
+// Marker positions are percentages of /images/kreomax-city.webp.
+// `studio` indexes STUDIOS; extras open the enrolment modal instead.
+const CITY_MARKERS = [
+  { id: 'l1', label: '1', short: 'Story', title: 'Story Studio', output: 'Story Script', color: '#10B981', x: 16, y: 50, studio: 0 },
+  { id: 'l2', label: '2', short: 'Research', title: 'Research Lab', output: 'Research Guide', color: '#4C7DFF', x: 16, y: 26, studio: 1 },
+  { id: 'l3', label: '3', short: 'Visual', title: 'Visual Studio', output: 'Concept Art', color: '#8B5CF6', x: 35, y: 32, studio: 2 },
+  { id: 'l4', label: '4', short: 'Motion', title: 'Motion Studio', output: 'Video Trailer', color: '#EC4899', x: 53, y: 24, studio: 3 },
+  { id: 'l5', label: '5', short: 'Web', title: 'Web Builder', output: 'Live Website', color: '#F59E0B', x: 71, y: 24, studio: 4 },
+  { id: 'l6', label: '6', short: 'Final', title: 'Final Project', output: 'Certificate', color: '#0EA5E9', x: 88, y: 16, studio: 5 },
+  { id: 'x1', icon: DoorOpen, short: 'Cohort', title: 'Creator Cohort', output: 'Enrol at the gate', plan: 'cohort-24h', blurb: 'A 24-hour weekend cohort that takes you through all six levels with a mentor.', cta: 'Apply for a cohort', color: '#6D4FD8', x: 20, y: 84, studio: null },
+  { id: 'x2', icon: Coffee, short: 'Mentor', title: '1:1 Mentorship', output: 'Mentor cafe', plan: 'training-1on1-30h', blurb: 'Personal guidance when you are stuck, with a mentor who knows your project.', cta: 'Ask about mentorship', color: '#6D4FD8', x: 60, y: 57, studio: null },
+  { id: 'x3', icon: Images, short: 'Showcase', title: 'Student Showcase', output: 'Gallery pavilion', plan: 'cohort-24h', blurb: 'Every finished project goes on display, ready to share with family and friends.', cta: 'Apply for a cohort', color: '#6D4FD8', x: 90, y: 43, studio: null },
 ];
 
+// Audience content — kept factual to what the product actually offers.
+const AUDIENCES = {
+  families: {
+    label: 'Parents & Students',
+    eyebrow: 'For families',
+    title: 'Screen time that ends with something real',
+    body: 'Your child moves from "I use AI" to "I made this" - a story, concept art, a trailer and a live website, guided step by step.',
+    points: [
+      'A clear 24-hour path across 6 levels - no guessing what to do next',
+      'Mentor-led cohorts and optional 1:1 mentorship',
+      'Visible milestones, real deliverables and a rubric-graded certificate',
+      'Builds seven core thinking skills, from critical thinking to self-learning',
+    ],
+  },
+  schools: {
+    label: 'Schools & Institutions',
+    eyebrow: 'For schools',
+    title: 'A ready-to-run AI creativity programme',
+    body: 'Bring a structured, hands-on creator curriculum to your innovation lab, club or classroom without building one from scratch.',
+    points: [
+      'Same 24-hour, 6-level curriculum with a trainer guide for facilitators',
+      'Student progress tracking and rubric-based evaluation',
+      'Certificates and portfolio outputs students can present',
+      'Builds seven core thinking skills across every level',
+    ],
+    cta: 'Talk to us about your school',
+  },
+};
+
 export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
-  const [activeStudio, setActiveStudio] = useState(0);
+  const [selectedId, setSelectedId] = useState('l1');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [heroVisible, setHeroVisible] = useState(false);
-  const [heroSlide, setHeroSlide] = useState(0);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showApplyModal, setShowApplyModal] = useState(false);
+  const [applyPlanId, setApplyPlanId] = useState(null);
+  const openApply = (planId) => { setApplyPlanId(planId || null); setShowApplyModal(true); };
+  // Launching the studio asks for an access code first (handled in App).
+  const primaryAction = () => onLaunchStudio('roadmap');
+  const startLabel = 'Start Building Now';
+  const launchLabel = 'Launch Studio';
+  const [audience, setAudience] = useState('families');
 
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 80);
     return () => clearTimeout(t);
   }, []);
 
-  useEffect(() => {
-    const iv = setInterval(() => {
-      setHeroSlide(s => (s + 1) % HERO_SLIDES.length);
-    }, 4500);
-    return () => clearInterval(iv);
-  }, []);
-
-  const nextSlide = () => setHeroSlide((heroSlide + 1) % HERO_SLIDES.length);
-  const prevSlide = () => setHeroSlide((heroSlide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-
-  const activeS = STUDIOS[activeStudio];
-  const currentSlide = HERO_SLIDES[heroSlide];
+  const selected = CITY_MARKERS.find((m) => m.id === selectedId) || CITY_MARKERS[0];
+  const selStudio = selected.studio === null ? null : STUDIOS[selected.studio];
 
   return (
     <div className="klp-root">
@@ -207,27 +231,23 @@ export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
           </div>
 
           <div className="klp-nav-links">
-            <button className="klp-nav-link" onClick={() => document.getElementById('klp-studios')?.scrollIntoView({ behavior: 'smooth' })}>Studios</button>
-            <button className="klp-nav-link" onClick={() => document.getElementById('klp-showcase')?.scrollIntoView({ behavior: 'smooth' })}>Student Work</button>
-            <button className="klp-nav-link klp-nav-link--pricing" onClick={() => setShowPaymentModal(true)}>
-              <CreditCard size={13} /> Cohorts & Pricing
-            </button>
-            <button className="klp-cta-btn klp-cta-btn--sm" onClick={() => setShowPaymentModal(true)}>
-              Launch Studio <ArrowRight size={14} />
+            <button className="klp-nav-link" onClick={() => document.getElementById('klp-city')?.scrollIntoView({ behavior: 'smooth' })}>Explore</button>
+            <button className="klp-nav-link" onClick={() => document.getElementById('klp-showcase')?.scrollIntoView({ behavior: 'smooth' })}>Sample Projects</button>
+            <button className="klp-cta-btn klp-cta-btn--sm" onClick={primaryAction}>
+              {launchLabel} <ArrowRight size={14} />
             </button>
           </div>
 
-          <button className="klp-mobile-menu-btn" onClick={() => setIsMobileMenuOpen(v => !v)}>
+          <button className="klp-mobile-menu-btn" aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'} aria-expanded={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(v => !v)}>
             {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
 
         {isMobileMenuOpen && (
           <div className="klp-mobile-menu">
-            <button className="klp-mobile-link" onClick={() => { document.getElementById('klp-studios')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}>Studios</button>
-            <button className="klp-mobile-link" onClick={() => { document.getElementById('klp-showcase')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}>Student Work</button>
-            <button className="klp-mobile-link" onClick={() => { setShowPaymentModal(true); setIsMobileMenuOpen(false); }}>Cohorts & Pricing</button>
-            <button className="klp-cta-btn klp-cta-btn--full" onClick={() => { setShowPaymentModal(true); setIsMobileMenuOpen(false); }}>Launch Studio</button>
+            <button className="klp-mobile-link" onClick={() => { document.getElementById('klp-city')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}>Explore</button>
+            <button className="klp-mobile-link" onClick={() => { document.getElementById('klp-showcase')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}>Sample Projects</button>
+            <button className="klp-cta-btn klp-cta-btn--full" onClick={() => { primaryAction(); setIsMobileMenuOpen(false); }}>{launchLabel}</button>
           </div>
         )}
       </nav>
@@ -238,196 +258,119 @@ export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
         <div className="klp-hero-bg-glow klp-hero-bg-glow--2" />
         <div className="klp-hero-bg-glow klp-hero-bg-glow--3" />
 
-        <div className="klp-hero-inner">
-          <div className="klp-hero-text">
-            <div className="klp-hero-badge">
-              <Sparkles size={13} />
-              <span>AI Creator Studio · 24 Hours · 6 Levels</span>
-            </div>
+        <HeroCarousel
+          onStart={primaryAction}
+          startLabel={startLabel}
+          onExplore={() => document.getElementById('klp-city')?.scrollIntoView({ behavior: 'smooth' })}
+        />
 
-            <h1 className="klp-hero-headline">
-              Stop Just Scrolling.<br />
-              <span className="klp-gradient-text">Start Cooking.</span>
-            </h1>
+      </section>
 
-            <p className="klp-hero-sub">
-              Turn your ideas into real screenplays, cinematic concept art,
-              movie trailers, and live showcase websites - guided step-by-step
-              with 6 Levels in 24 hours.
-            </p>
-
-            <div className="klp-hero-actions">
-              <button className="klp-cta-btn klp-cta-btn--primary" onClick={() => setShowPaymentModal(true)}>
-                <Play size={16} fill="currentColor" />
-                Start Building Now
+      {/* AUDIENCES */}
+      <section className="klp-section klp-audience-section" id="klp-audience">
+        <div className="klp-section-inner">
+          <div className="klp-audience-tabs" role="tablist" aria-label="Who is this for">
+            {Object.entries(AUDIENCES).map(([key, a]) => (
+              <button
+                key={key}
+                role="tab"
+                id={`klp-aud-tab-${key}`}
+                aria-selected={audience === key}
+                aria-controls="klp-aud-panel"
+                className={`klp-audience-tab ${audience === key ? 'klp-audience-tab--active' : ''}`}
+                onClick={() => setAudience(key)}
+              >
+                {a.label}
               </button>
-              <button className="klp-cta-btn klp-cta-btn--ghost" onClick={() => document.getElementById('klp-studios')?.scrollIntoView({ behavior: 'smooth' })}>
-                Explore Studios <ChevronRight size={16} />
-              </button>
-            </div>
-
-            <div className="klp-hero-stats">
-              <div className="klp-stat">
-                <span className="klp-stat-num">6</span>
-                <span className="klp-stat-label">AI Studios</span>
-              </div>
-              <div className="klp-stat-divider" />
-              <div className="klp-stat">
-                <span className="klp-stat-num">24</span>
-                <span className="klp-stat-label">Guided Hours</span>
-              </div>
-              <div className="klp-stat-divider" />
-              <div className="klp-stat">
-                <span className="klp-stat-num">5+</span>
-                <span className="klp-stat-label">Real Deliverables</span>
-              </div>
-            </div>
+            ))}
           </div>
-
-          <div className="klp-hero-visual">
-            <div className="klp-hero-img-frame">
-              {/* Motion Slideshow */}
-              {HERO_SLIDES.map((slide, i) => (
-                <div
-                  key={slide.src}
-                  className={`klp-hero-img-slide ${i === heroSlide ? 'klp-hero-img-slide--active' : ''}`}
-                >
+          {(() => {
+            const a = AUDIENCES[audience];
+            const isSchool = audience === 'schools';
+            return (
+              <div className="klp-audience-panel" id="klp-aud-panel" role="tabpanel" aria-labelledby={`klp-aud-tab-${audience}`}>
+                <div className="klp-audience-copy">
+                  <div className="klp-section-eyebrow"><Sparkles size={13} /> {a.eyebrow}</div>
+                  <h2 className="klp-section-title klp-audience-title">{a.title}</h2>
+                  <p className="klp-audience-body">{a.body}</p>
+                  <ul className="klp-audience-points">
+                    {a.points.map((pt) => (
+                      <li key={pt}><CheckCircle2 size={18} aria-hidden="true" /> <span>{pt}</span></li>
+                    ))}
+                  </ul>
+                  {isSchool ? (
+                    <a
+                      className="klp-cta-btn klp-cta-btn--primary"
+                      href="https://wa.me/918310590859?text=Hi%20Kreomax%2C%20we%20are%20a%20school%20interested%20in%20the%20Creator%20programme.%20Please%20share%20details."
+                      target="_blank" rel="noopener noreferrer"
+                    >
+                      {a.cta} <ArrowRight size={16} />
+                    </a>
+                  ) : null}
+                </div>
+                <div className="klp-audience-visual">
                   <img
-                    src={slide.src}
-                    alt={slide.caption}
-                    className="klp-hero-img"
+                    src={isSchool ? '/images/schools.webp' : '/images/parents.webp'}
+                    alt={isSchool
+                      ? 'A teacher showing class progress on a smart board to students with a friendly AI robot'
+                      : 'A parent and child building a project together, with a progress card, certificate and robot buddy'}
+                    width="1100" height="802" loading="lazy" decoding="async"
                   />
                 </div>
-              ))}
-
-              <div className="klp-hero-img-overlay" />
-
-              {/* Slide Caption Banner */}
-              <div className="klp-hero-caption-card">
-                <span className="klp-hero-caption-tag">{currentSlide.badge}</span>
-                <span className="klp-hero-caption-text">{currentSlide.caption}</span>
               </div>
-
-              {/* Prev / Next controls */}
-              <button className="klp-slide-nav klp-slide-nav--prev" onClick={prevSlide} aria-label="Previous slide">
-                <ChevronLeft size={16} />
-              </button>
-              <button className="klp-slide-nav klp-slide-nav--next" onClick={nextSlide} aria-label="Next slide">
-                <ChevronRight size={16} />
-              </button>
-
-              {/* Slide dots */}
-              <div className="klp-slide-dots">
-                {HERO_SLIDES.map((_, i) => (
-                  <button
-                    key={i}
-                    className={`klp-slide-dot ${i === heroSlide ? 'klp-slide-dot--active' : ''}`}
-                    onClick={() => setHeroSlide(i)}
-                    aria-label={`Go to slide ${i + 1}`}
-                  />
-                ))}
-              </div>
-
-              {/* Floating output pills */}
-              <div className="klp-float-pill klp-float-pill--1">
-                <BookOpen size={14} color="#34d399" /> Screenplay written
-              </div>
-              <div className="klp-float-pill klp-float-pill--2">
-                <ImageIcon size={14} color="#a78bfa" /> Concept art generated
-              </div>
-              <div className="klp-float-pill klp-float-pill--3">
-                <Award size={14} color="#38bdf8" /> 98/100 certified
-              </div>
-            </div>
-          </div>
+            );
+          })()}
         </div>
       </section>
 
-      {/* STUDIOS SECTION */}
-      <section className="klp-section klp-studios-section" id="klp-studios">
+      {/* CREATOR STATS (thinking skills) */}
+      <SkillRadarSection />
+
+      {/* KREOMAX CITY */}
+      <section className="klp-section klp-city-section" id="klp-city">
         <div className="klp-section-inner">
           <div className="klp-section-header">
-            <div className="klp-section-eyebrow">
-              <Sparkles size={13} /> What's Inside
-            </div>
-            <h2 className="klp-section-title">
-              One Platform. 6 Levels of Creation.
-            </h2>
-            <p className="klp-section-sub">
-              Expert-Led Learning. Hands-On Creation. Real-World Results.
-            </p>
+            <div className="klp-section-eyebrow"><Sparkles size={13} /> Explore the city</div>
+            <h2 className="klp-section-title">Welcome to Kreomax City</h2>
+            <p className="klp-section-sub">Every building is a skill. Tap a building to see what you will make there.</p>
           </div>
-
-          <div className="klp-studios-layout">
-            {/* Left: Studio Tab List */}
-            <div className="klp-studio-tabs">
-              {STUDIOS.map((studio, i) => {
-                const Icon = studio.icon;
-                const isActive = activeStudio === i;
-                return (
-                  <button
-                    key={studio.id}
-                    className={`klp-studio-tab ${isActive ? 'klp-studio-tab--active' : ''}`}
-                    style={{ '--studio-color': studio.color, '--studio-glow': studio.glow }}
-                    onClick={() => setActiveStudio(i)}
-                  >
-                    <div className="klp-studio-tab-num">Level {studio.level}</div>
-                    <div className="klp-studio-tab-icon">
-                      <Icon size={18} />
-                    </div>
-                    <div className="klp-studio-tab-info">
-                      <div className="klp-studio-tab-name">{studio.name}</div>
-                      <div className="klp-studio-tab-tagline">{studio.tagline}</div>
-                    </div>
-                    <ChevronRight size={14} className="klp-studio-tab-arrow" />
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Right: Active Studio Preview Panel */}
-            <div
-              className="klp-studio-preview"
-              style={{ '--studio-color': activeS.color, '--studio-glow': activeS.glow }}
-              key={activeS.id}
-            >
-              <div className="klp-studio-preview-header">
-                <div className="klp-studio-preview-badge">
-                  Level {activeS.level} · {activeS.engine}
-                </div>
-                <div className="klp-studio-preview-title">
-                  <span className="klp-studio-preview-icon-wrap" style={{ color: activeS.color }}>
-                    <activeS.icon size={22} />
-                  </span>
-                  {activeS.name}
-                </div>
-                <div className="klp-studio-preview-tagline">{activeS.tagline}</div>
+          <GameMap
+            image="/images/kreomax-city.webp"
+            alt="Illustrated Kreomax City: a library, observatory, art studio, cinema, web workshop and town hall along a glowing road, with a mentor cafe and gallery"
+            width={1600}
+            height={978}
+            markers={CITY_MARKERS}
+            legendTitle="City key"
+            selectedId={selected.id}
+            onSelect={(m) => setSelectedId(m.id)}
+            aside={
+              <div className="klp-city-detail" style={{ '--studio-color': selected.color }} key={selected.id}>
+                <span className="klp-city-detail-tag">
+                  {selStudio ? `Level ${selStudio.level} · ${selStudio.engine}` : 'Beyond the levels'}
+                </span>
+                <h3 className="klp-city-detail-title">{selStudio ? selStudio.name : selected.title}</h3>
+                <p className="klp-city-detail-text">{selStudio ? selStudio.tagline : selected.blurb}</p>
+                {selStudio && (
+                  <p className="klp-city-detail-meta">
+                    Hours {(selStudio.level - 1) * 4 + 1}-{selStudio.level * 4} · four one-hour sessions
+                  </p>
+                )}
+                {selStudio && (
+                  <div className="klp-city-skills" aria-label="Thinking skills exercised here">
+                    {skillsForLevel(selStudio.level).map((sk) => (
+                      <span key={sk.id} className="klp-city-skill" style={{ '--sk-color': sk.color }}>{sk.short}</span>
+                    ))}
+                  </div>
+                )}
+                <span className="klp-city-detail-out">
+                  <Award size={15} aria-hidden="true" /> You make: {selStudio ? selStudio.output : selected.output}
+                </span>
+                <button className="klp-cta-btn klp-cta-btn--primary" onClick={() => (selStudio ? onLaunchStudio(selStudio.id) : openApply(selected.plan))}>
+                  {selStudio ? `Open ${selStudio.name}` : selected.cta} <ArrowRight size={16} />
+                </button>
               </div>
-
-              <div className="klp-studio-preview-screen">
-                <div className="klp-screen-dots">
-                  <span /><span /><span />
-                </div>
-                <div className="klp-screen-title">{activeS.engine} · {activeS.name}</div>
-                <pre className="klp-screen-content">{activeS.preview}</pre>
-              </div>
-
-              <div className="klp-studio-preview-output">
-                <div className="klp-output-label">Your deliverable:</div>
-                <div className="klp-output-pill">
-                  <Star size={12} fill="currentColor" />
-                  {activeS.output}
-                </div>
-              </div>
-
-              <button
-                className="klp-studio-launch-btn"
-                onClick={() => setShowPaymentModal(true)}
-              >
-                Open {activeS.name} <ArrowRight size={15} />
-              </button>
-            </div>
-          </div>
+            }
+          />
         </div>
       </section>
 
@@ -443,30 +386,22 @@ export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
             </h2>
           </div>
 
-          <div className="klp-pipeline">
-            {PIPELINE.map((step, i) => {
-              const StepIcon = step.icon;
-              return (
-                <React.Fragment key={i}>
-                  <div className="klp-pipeline-step">
-                    <div
-                      className="klp-pipeline-icon-box"
-                      style={{ color: step.color, background: step.bg }}
-                    >
-                      <StepIcon size={24} />
-                    </div>
-                    <div className="klp-pipeline-label">{step.label}</div>
-                    <div className="klp-pipeline-sub">{step.sub}</div>
-                  </div>
-                  {i < PIPELINE.length - 1 && (
-                    <div className="klp-pipeline-arrow">
-                      <ArrowRight size={16} />
-                    </div>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </div>
+          <ol className="klp-journey">
+            {PIPELINE.map((step, i) => (
+              <li key={step.label} className="klp-journey-step" style={{ '--step-color': step.color }}>
+                <span className="klp-journey-num" aria-hidden="true">{i + 1}</span>
+                <img
+                  className="klp-journey-img"
+                  src={`/images/${step.img}.webp`}
+                  alt=""
+                  width="800" height="500" loading="lazy" decoding="async"
+                />
+                <span className="klp-journey-hours">{step.hours}</span>
+                <span className="klp-journey-label">{step.label}</span>
+                <span className="klp-journey-sub">{step.sub}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
@@ -475,13 +410,13 @@ export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
         <div className="klp-section-inner">
           <div className="klp-section-header">
             <div className="klp-section-eyebrow">
-              <Star size={13} /> Student Work
+              <Star size={13} /> Sample projects
             </div>
             <h2 className="klp-section-title">
-              Built by Students, Just Like You
+              What a finished portfolio looks like
             </h2>
             <p className="klp-section-sub">
-              Discover inspiring student projects that transform creative ideas into real-world innovations with Kreomax.
+              Sample projects showing the kind of work students build across the six levels.
             </p>
           </div>
 
@@ -497,6 +432,7 @@ export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
                     src={proj.coverImg}
                     alt={proj.title}
                     className="klp-showcase-img"
+                    width="900" height="675" loading="lazy" decoding="async"
                   />
                   <div className="klp-showcase-img-overlay" />
                   <div className="klp-showcase-score">{proj.score}</div>
@@ -517,27 +453,44 @@ export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
         </div>
       </section>
 
+      {/* FAQ */}
+      <AskBuddySection />
+
       {/* BOTTOM CTA BAND */}
-      <section className="klp-cta-section">
-        <div className="klp-cta-glow klp-cta-glow--1" />
-        <div className="klp-cta-glow klp-cta-glow--2" />
-        <div className="klp-cta-inner">
-          <div className="klp-hero-badge" style={{ margin: '0 auto 1.5rem' }}>
-            <Sparkles size={13} /> Start Today - No Experience Needed
+      <section className="klp-cta-section klp-cta-section--split">
+        <div className="klp-cta-card">
+          <div className="klp-cta-copy">
+            <div className="klp-hero-badge">
+              <Sparkles size={13} /> Start today - no experience needed
+            </div>
+            <h2 className="klp-cta-title">
+              Your first creation is <span className="klp-gradient-text">one hour away.</span>
+            </h2>
+            <p className="klp-cta-sub">
+              Pick a level, meet your AI buddy, and make something you are proud to share.
+            </p>
+            <div className="klp-cta-actions">
+              <a
+                className="klp-intro-pill"
+                href={whatsappLink('Hi Kreomax, I would like to book the intro class (₹199). My name is ')}
+                target="_blank" rel="noopener noreferrer"
+              >
+                <span className="klp-intro-arrow" aria-hidden="true"><ArrowRight size={20} /></span>
+                <span className="klp-intro-text">Intro Class <strong>₹199</strong></span>
+              </a>
+              <button className="klp-cta-btn klp-cta-btn--ghost klp-cta-btn--lg" onClick={primaryAction}>
+                {startLabel}
+              </button>
+            </div>
+            <p className="klp-cta-hint">Book the intro class on WhatsApp. We confirm the date and details with you there.</p>
+            <p className="klp-cta-facts">24 guided hours · 6 creative studios · 5 real deliverables · 1 certificate</p>
           </div>
-          <h2 className="klp-cta-title">
-            Your Cinematic Universe<br />
-            <span className="klp-gradient-text">Starts Right Now</span>
-          </h2>
-          <p className="klp-cta-sub">
-            24 guided hours · 6 creative studios · 5 real deliverables · 1 certified portfolio
-          </p>
-          <div className="klp-cta-actions">
-            <button className="klp-cta-btn klp-cta-btn--primary klp-cta-btn--lg" onClick={() => setShowPaymentModal(true)}>
-              <Play size={18} fill="currentColor" />
-              Launch Kreomax Studio
-            </button>
-          </div>
+          <img
+            className="klp-cta-photo"
+            src="/images/hero.webp"
+            alt="Two students and their robot buddy creating a screenplay, concept art and a video together"
+            width="1100" height="1035" loading="lazy" decoding="async"
+          />
         </div>
       </section>
 
@@ -573,13 +526,13 @@ export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
               <h4 className="klp-footer-col-title">Creator Pathways</h4>
               <ul className="klp-footer-links">
                 <li>
-                  <button type="button" onClick={() => setShowPaymentModal(true)}>Creator Cohort (24 Hrs · 2 Months)</button>
+                  <button type="button" onClick={() => openApply('cohort-24h')}>Creator Cohort (24 Hrs · 2 Months)</button>
                 </li>
                 <li>
-                  <button type="button" onClick={() => setShowPaymentModal(true)}>1:1 Creator Mentorship (30 Hrs)</button>
+                  <button type="button" onClick={() => openApply('training-1on1-30h')}>1:1 Creator Mentorship (30 Hrs)</button>
                 </li>
                 <li>
-                  <button type="button" onClick={() => document.getElementById('klp-studios')?.scrollIntoView({ behavior: 'smooth' })}>
+                  <button type="button" onClick={() => document.getElementById('klp-city')?.scrollIntoView({ behavior: 'smooth' })}>
                     6 Multimodal AI Studios
                   </button>
                 </li>
@@ -625,7 +578,6 @@ export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
                 <MapPin size={16} className="klp-contact-icon" />
                 <div className="klp-footer-address">
                   <strong>Kreomax Creative Labs</strong>
-                  <span>No: 50, Kodigehalli Main Road</span>
                   <span>Bangalore, Karnataka, India</span>
                 </div>
               </div>
@@ -637,18 +589,19 @@ export function KreomaxLandingPage({ onLaunchStudio, onOpenKeyModal }) {
             <div className="klp-footer-copy">
               © {new Date().getFullYear()} Kreomax Creator Studio. All rights reserved.
             </div>
+            <nav className="klp-footer-legal" aria-label="Policies">
+              <a href="/terms">Terms</a>
+              <a href="/privacy">Privacy</a>
+            </nav>
           </div>
         </div>
       </footer>
 
-      {/* Razorpay Payment & Pathway Modal */}
-      <PaymentModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        onSuccessUnlock={(planId) => {
-          setShowPaymentModal(false);
-          onLaunchStudio('roadmap');
-        }}
+      {/* Programme enquiry / application form */}
+      <ApplyModal
+        isOpen={showApplyModal}
+        initialPlanId={applyPlanId}
+        onClose={() => { setShowApplyModal(false); setApplyPlanId(null); }}
       />
 
     </div>

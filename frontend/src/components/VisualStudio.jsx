@@ -14,6 +14,7 @@ import {
   Globe
 } from 'lucide-react';
 import './VisualStudio.css';
+import { StudioHeader } from './StudioHeader';
 
 export function VisualStudio({ 
   projectTheme, 
@@ -34,32 +35,32 @@ export function VisualStudio({
     {
       id: 1,
       title: "Scene 1: Lunar Base Signal",
-      prompt: "Pixar 3D style, cute 14-year-old Indian student space cadet kneeling on lunar crater beside ISRO Pragyan-X rover, Earth rising in background, glowing visor, cinematic lighting, 16:9 widescreen",
-      image: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=1200&auto=format&fit=crop&q=80",
+      prompt: "Pixar 3D style, cute 14-year-old Indian student space cadet kneeling on lunar crater beside Pragyan-X rover, Earth rising in background, glowing visor, cinematic lighting, 16:9 widescreen",
+      image: "/images/game-map-islands.webp",
       aspect: "16:9",
-      tags: ["Pixar 3D", "ISRO Rover", "Moon Base", "Scene 1"]
+      tags: ["Pixar 3D", "Lunar Rover", "Moon Base", "Scene 1"]
     },
     {
       id: 2,
       title: "Scene 2: Ancient Ice Vault",
       prompt: "Epic 3D animation still of an underground lunar ice cavern filled with glowing golden crystal formations and floating stardust, mysterious and magical atmosphere --ar 16:9",
-      image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80",
+      image: "/images/kreomax-city.webp",
       aspect: "16:9",
       tags: ["Ice Vault", "Golden Glow", "Mystery", "Scene 2"]
     },
     {
       id: 3,
       title: "Scene 3: High-Speed Solar Rover Chase",
-      prompt: "Exciting action movie still of a high-tech ISRO solar rover drifting across low-gravity moon craters under starry galaxy skies, dynamic motion blur, vibrant colors --ar 16:9",
-      image: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=1200&auto=format&fit=crop&q=80",
+      prompt: "Exciting action movie still of a high-tech solar rover drifting across low-gravity moon craters under starry galaxy skies, dynamic motion blur, vibrant colors --ar 16:9",
+      image: "/images/hero-slide-1.webp",
       aspect: "16:9",
-      tags: ["Fast Chase", "ISRO Rover", "Action", "Scene 3"]
+      tags: ["Fast Chase", "Lunar Rover", "Action", "Scene 3"]
     },
     {
       id: 4,
       title: "Scene 4: Golden Earthrise Finale",
       prompt: "Inspirational movie ending frame, silhouette of a heroic young Indian astronaut watching a breathtaking golden Earthrise from a glass lunar dome, beautiful lighting --ar 16:9",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&auto=format&fit=crop&q=80",
+      image: "/images/hero-slide-3.webp",
       aspect: "16:9",
       tags: ["Hero Earthrise", "Victory", "Golden Light", "Scene 4"]
     }
@@ -131,26 +132,20 @@ export function VisualStudio({
 
   return (
     <div className="ca-visual-container">
+      <StudioHeader
+        level={3}
+        title="Images & Art"
+        subtitle="Choose a style and generate concept art for every scene."
+        actions={(
+          <>
+            <button className="btn-secondary btn-sm" onClick={handleDownloadZip}><Download size={14} /><span>Export</span></button>
+            <button className="btn-primary btn-sm" onClick={onNavigateNext}><span>Next: Level 4</span><ArrowRight size={14} /></button>
+          </>
+        )}
+      />
+
       {/* Header */}
       <div className="ca-visual-header glass-panel">
-        <div className="ca-visual-title-row">
-          <div className="ca-tool-badge badge-purple">
-            <ImageIcon size={14} />
-            <span>LEVEL 3 · MIDJOURNEY</span>
-          </div>
-          <div className="ca-btn-group">
-            <button className="btn-secondary btn-sm" onClick={handleDownloadZip}>
-              <Download size={14} />
-              <span>Export</span>
-            </button>
-            <button className="btn-primary btn-sm" onClick={onNavigateNext}>
-              <span>Level 4</span>
-              <ArrowRight size={14} />
-            </button>
-          </div>
-        </div>
-
-        <h2 className="ca-visual-title">Images & Art</h2>
 
         {/* Scene Selector Strip */}
         <div className="ca-scene-strip">
@@ -307,7 +302,7 @@ export function VisualStudio({
           {/* Prompt Formula Output Box */}
           <div className="ca-keyframe-prompt-card">
             <div className="ca-prompt-lbl-row">
-              <span className="text-xs font-bold text-cyan">MIDJOURNEY PROMPT RECIPE:</span>
+              <span className="text-xs font-bold text-cyan">PROMPT RECIPE:</span>
               <span className="badge badge-teal">--ar {aspectRatio}</span>
             </div>
             <code className="ca-keyframe-prompt-text">{activeKeyframe.prompt}</code>
@@ -316,7 +311,7 @@ export function VisualStudio({
           {/* Bridge CTA */}
           <div className="ca-visual-next-bar">
             <button className="btn-success" onClick={onNavigateNext}>
-              <span>Level Up to Level 4: Animate into a Movie Trailer (Google Veo)</span>
+              <span>Level Up to Level 4: Animate into a Movie Trailer</span>
               <ArrowRight size={16} />
             </button>
           </div>

@@ -8,9 +8,9 @@
   padding: 24px 28px;
   margin-bottom: 24px;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 3px rgba(36, 28, 61, 0.04);
 }
 
 .ca-builder-title-row {
@@ -25,7 +25,7 @@
   font-size: 1.8rem;
   font-weight: 800;
   margin-bottom: 8px;
-  color: #0F172A;
+  color: #241C3D;
 }
 
 .ca-builder-desc {
@@ -56,8 +56,8 @@
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #F8F5FF;
+  border: 1px solid #E7E0F5;
   border-radius: 8px;
   color: #475569;
   font-size: 0.82rem;
@@ -66,8 +66,8 @@
   transition: all 0.2s ease;
 }
 .ca-toggle-btn:hover {
-  background: #F1F5F9;
-  color: #0F172A;
+  background: #F1ECFB;
+  color: #241C3D;
 }
 .ca-toggle-btn.active {
   background: #FEF3C7;
@@ -78,10 +78,10 @@
 .ca-device-toggles {
   display: flex;
   gap: 4px;
-  background: #F1F5F9;
+  background: #F1ECFB;
   padding: 3px;
   border-radius: 8px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
 }
 
 .ca-device-btn {
@@ -92,19 +92,19 @@
   background: transparent;
   border: none;
   border-radius: 6px;
-  color: #64748B;
+  color: #6B6385;
   font-size: 0.78rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .ca-device-btn:hover {
-  color: #0F172A;
+  color: #241C3D;
 }
 .ca-device-btn.active {
   background: #FFFFFF;
-  color: #0F172A;
+  color: #241C3D;
   font-weight: 700;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 2px rgba(36, 28, 61, 0.08);
 }
 
 .ca-accent-picker {
@@ -154,7 +154,7 @@
 /* Mock Site Body */
 .mock-site-body {
   background: #0B0E17;
-  color: #F8FAFC;
+  color: #F8F5FF;
   font-family: var(--font-sans);
 }
 
@@ -184,7 +184,7 @@
 
 .mock-sub {
   font-size: 0.95rem;
-  color: #94A3B8;
+  color: #9D95B5;
   max-width: 600px;
   margin: 0 auto 24px;
   line-height: 1.5;
@@ -273,7 +273,7 @@
   border: none;
   border-bottom: 2px solid transparent;
   padding: 8px 14px;
-  color: #94A3B8;
+  color: #9D95B5;
   font-weight: 600;
   cursor: pointer;
 }
@@ -295,7 +295,7 @@
 
 .mock-story-text {
   font-size: 0.86rem;
-  color: #CBD5E1;
+  color: #D9D0EE;
   line-height: 1.5;
   margin-bottom: 12px;
 }
@@ -347,7 +347,7 @@
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 0.8125rem;
-  color: #64748B;
+  color: #6B6385;
 }
 
 .ca-builder-next-bar {
@@ -383,7 +383,7 @@
   padding: 20px;
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: #F8FAFC;
+  color: #F8F5FF;
   line-height: 1.5;
   max-height: 500px;
   overflow-y: auto;
@@ -398,3 +398,8 @@
   padding-top: 16px;
   border-top: 1px solid var(--border-subtle);
 }
+
+/* The mock site is a dark theme: keep its text light regardless of the app theme tokens */
+.mock-site-body { --text-primary: #F8F5FF; --text-secondary: #D9D0EE; --text-muted: #B7AECF; }
+.mock-site-body h1, .mock-site-body h2, .mock-site-body h3, .mock-site-body h4 { color: #F8F5FF; }
+.mock-footer { color: #B7AECF; }

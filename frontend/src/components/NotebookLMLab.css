@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────
-   NotebookLM Research Lab — Clean Educational Light Theme
+   Research Lab — Clean Educational Light Theme
    Cognitive Academy — AI Creator Suite
    ───────────────────────────────────────────────────────────────── */
 
@@ -20,8 +20,8 @@
   padding: 1.25rem 1.6rem;
   border-radius: 16px;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  border: 1px solid #E7E0F5;
+  box-shadow: 0 1px 3px rgba(36, 28, 61, 0.04);
   gap: 1rem;
 }
 
@@ -46,7 +46,7 @@
   font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
   font-size: 1.5rem;
   font-weight: 800;
-  color: #0F172A;
+  color: #241C3D;
   letter-spacing: -0.02em;
   margin: 0;
   line-height: 1.2;
@@ -71,10 +71,10 @@
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 16px;
   padding: 1.25rem;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 3px rgba(36, 28, 61, 0.04);
 }
 
 .ca-panel-head {
@@ -111,8 +111,8 @@
   gap: 6px;
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #F8F5FF;
+  border: 1px solid #E7E0F5;
   color: #475569;
   font-size: 0.74rem;
   font-weight: 600;
@@ -124,22 +124,22 @@
 }
 
 .ca-source-pill:hover {
-  background: #F1F5F9;
-  color: #0F172A;
+  background: #F1ECFB;
+  color: #241C3D;
 }
 
 .ca-source-pill.active {
   background: #EEF2FF;
-  border-color: #4F46E5;
-  color: #4338CA;
+  border-color: #6D4FD8;
+  color: #5B3FC4;
   font-weight: 700;
 }
 
 /* Document Reader */
 .ca-source-reader {
   flex: 1;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #F8F5FF;
+  border: 1px solid #E7E0F5;
   border-radius: 10px;
   padding: 1rem;
   overflow-y: auto;
@@ -149,13 +149,13 @@
 .ca-reader-title {
   font-size: 0.84rem;
   font-weight: 700;
-  color: #0F172A;
+  color: #241C3D;
   margin-bottom: 0.5rem;
 }
 
 .ca-reader-content {
   font-size: 0.82rem;
-  color: #334155;
+  color: #433A5E;
   line-height: 1.65;
 }
 
@@ -225,11 +225,11 @@
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D9D0EE;
   border-radius: 16px;
   padding: 1.25rem;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 3px rgba(36, 28, 61, 0.04);
 }
 
 .ca-chat-top-status {
@@ -238,13 +238,13 @@
   justify-content: space-between;
   padding-bottom: 0.75rem;
   margin-bottom: 0.75rem;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #F1ECFB;
 }
 
 .ca-chat-status-text {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #0F172A;
+  color: #241C3D;
 }
 
 .ca-zero-hallucination-pill {
@@ -279,15 +279,15 @@
 
 .ca-chat-msg.ai {
   align-self: flex-start;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: #F8F5FF;
+  border: 1px solid #E7E0F5;
   color: #1E293B;
   border-bottom-left-radius: 2px;
 }
 
 .ca-chat-msg.user {
   align-self: flex-end;
-  background: #4F46E5;
+  background: #6D4FD8;
   color: #FFFFFF;
   border-bottom-right-radius: 2px;
 }
@@ -302,7 +302,7 @@
   border: 1px solid #C7D2FE;
   border-radius: 6px;
   font-size: 0.75rem;
-  color: #4338CA;
+  color: #5B3FC4;
   font-weight: 600;
   cursor: pointer;
 }
@@ -318,10 +318,10 @@
 
 .ca-prompt-chip {
   padding: 5px 12px;
-  background: #F1F5F9;
-  border: 1px solid #CBD5E1;
+  background: #F1ECFB;
+  border: 1px solid #D9D0EE;
   border-radius: 14px;
-  color: #334155;
+  color: #433A5E;
   font-size: 0.78rem;
   font-weight: 500;
   white-space: nowrap;
@@ -330,8 +330,8 @@
 }
 
 .ca-prompt-chip:hover {
-  background: #E2E8F0;
-  color: #0F172A;
+  background: #E7E0F5;
+  color: #241C3D;
 }
 
 /* Input Row */
@@ -339,28 +339,28 @@
   display: flex;
   gap: 8px;
   padding-top: 0.75rem;
-  border-top: 1px solid #F1F5F9;
+  border-top: 1px solid #F1ECFB;
   margin-top: 0.5rem;
 }
 
 .ca-input-field {
   flex: 1;
   background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D9D0EE;
   border-radius: 8px;
   padding: 9px 12px;
-  color: #0F172A;
+  color: #241C3D;
   font-size: 0.84rem;
   outline: none;
 }
 
 .ca-input-field:focus {
-  border-color: #4F46E5;
+  border-color: #6D4FD8;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .ca-send-btn {
-  background: #4F46E5;
+  background: #6D4FD8;
   border: none;
   color: #FFF;
   width: 38px;
@@ -374,7 +374,7 @@
 }
 
 .ca-send-btn:hover:not(:disabled) {
-  background: #4338CA;
+  background: #5B3FC4;
 }
 
 .ca-send-btn:disabled {
@@ -386,7 +386,7 @@
 .ca-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(36, 28, 61, 0.45);
   backdrop-filter: blur(4px);
   z-index: 1000;
   display: flex;
@@ -397,12 +397,12 @@
 
 .ca-modal-content {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E7E0F5;
   border-radius: 16px;
   width: 100%;
   max-width: 480px;
   padding: 1.5rem;
-  box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 20px 40px -8px rgba(36, 28, 61, 0.15);
 }
 
 .ca-modal-header {
@@ -415,16 +415,16 @@
 .ca-modal-header h3 {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #0F172A;
+  color: #241C3D;
 }
 
 .ca-close-btn {
-  background: #F1F5F9;
+  background: #F1ECFB;
   border: none;
   border-radius: 6px;
   padding: 4px;
   cursor: pointer;
-  color: #64748B;
+  color: #6B6385;
 }
 
 .ca-form-group {
@@ -443,10 +443,10 @@
 .ca-form-group input,
 .ca-form-group textarea {
   background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D9D0EE;
   border-radius: 8px;
   padding: 8px 12px;
-  color: #0F172A;
+  color: #241C3D;
   font-size: 0.84rem;
   outline: none;
 }

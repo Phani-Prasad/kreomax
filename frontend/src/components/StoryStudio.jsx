@@ -4,9 +4,10 @@ import {
   Sparkles, Download, ArrowRight, User, Film, RefreshCw, Check, Copy
 } from 'lucide-react';
 import './StoryStudio.css';
+import { StudioHeader } from './StudioHeader';
 
 const HERO_PRESETS = [
-  { label: "🚀 Space Cadet", role: "ISRO Astronaut Cadet", world: "Moon Base 2085", goal: "Protect the lunar water vault" },
+  { label: "🚀 Space Cadet", role: "Astronaut Cadet", world: "Moon Base 2085", goal: "Protect the lunar water vault" },
   { label: "🛕 Cyber Historian", role: "AI Temple Code Decoder", world: "Varanasi 2090", goal: "Solve a 1000-year-old mystery" },
   { label: "🌿 Eco Engineer", role: "Smart Drone Builder", world: "Bengaluru 2080", goal: "Restore clean rivers" },
   { label: "🤖 AI Inventor", role: "Village Robotics Prodigy", world: "Smart Village 2075", goal: "Build rescue robots" }
@@ -19,7 +20,7 @@ export function StoryStudio({ projectTheme, onSaveAsset, onNavigateNext, onOpenT
 
   // Simple Hero State (defaults to student's chosen project theme)
   const [hero, setHero] = useState({
-    name: 'Aarav Sharma',
+    name: 'Kai Rivera',
     role: 'Creative Explorer',
     world: projectTheme || 'My Adventure World',
     goal: 'Discover the hidden secret and complete the mission'
@@ -31,29 +32,29 @@ export function StoryStudio({ projectTheme, onSaveAsset, onNavigateNext, onOpenT
       id: 1,
       type: "Scene 1: Discovery",
       title: "The Silent Crater",
-      action: "Aarav inspects the dark ice vault entrance under the moon's southern stars.",
-      dialogue: "Aarav: 'The telemetry signals are active... we are not alone here.'"
+      action: "Kai inspects the dark ice vault entrance under the moon's southern stars.",
+      dialogue: "Kai: 'The telemetry signals are active... we are not alone here.'"
     },
     {
       id: 2,
       type: "Scene 2: Challenge",
       title: "Rover Alert",
       action: "Warning sirens flash red across Pragyan-X. An unregistered beacon signals nearby.",
-      dialogue: "Aarav: 'Hold steady! Rerouting backup solar batteries now.'"
+      dialogue: "Kai: 'Hold steady! Rerouting backup solar batteries now.'"
     },
     {
       id: 3,
       type: "Scene 3: Climax",
       title: "The Encrypted Vault",
-      action: "Aarav connects his AI scanner to the ancient lunar console. Code streams across his visor.",
-      dialogue: "Aarav: 'Decryption complete! The water reserves are secure!'"
+      action: "Kai connects his AI scanner to the ancient lunar console. Code streams across his visor.",
+      dialogue: "Kai: 'Decryption complete! The water reserves are secure!'"
     },
     {
       id: 4,
       type: "Scene 4: Victory",
       title: "Transmission Home",
       action: "Dawn breaks over Shackleton Crater. Earth glows blue on the horizon.",
-      dialogue: "Aarav: 'Mission Control Bengaluru, Lunar Station Alpha is safe.'"
+      dialogue: "Kai: 'Mission Control Bengaluru, Lunar Station Alpha is safe.'"
     }
   ]);
 
@@ -122,24 +123,17 @@ ${scenes.map(s => `## ${s.type}: ${s.title}\n${s.action}\n\n${s.dialogue}\n`).jo
 
   return (
     <div className="ca-story-simple">
-      {/* Top Header */}
-      <div className="ca-story-top glass-panel">
-        <div>
-          <span className="ca-level-tag">LEVEL 1 · CHATGPT</span>
-          <h2 className="ca-story-heading">Story Writing</h2>
-        </div>
-
-        <div className="ca-story-actions">
-          <button className="btn-secondary btn-sm" onClick={handleExport}>
-            <Download size={14} />
-            <span>Export</span>
-          </button>
-          <button className="btn-primary btn-sm" onClick={onNavigateNext}>
-            <span>Level 2</span>
-            <ArrowRight size={14} />
-          </button>
-        </div>
-      </div>
+      <StudioHeader
+        level={1}
+        title="Story Writing"
+        subtitle="Create your hero and write a four-scene screenplay."
+        actions={(
+          <>
+            <button className="btn-secondary btn-sm" onClick={handleExport}><Download size={14} /><span>Export</span></button>
+            <button className="btn-primary btn-sm" onClick={onNavigateNext}><span>Next: Level 2</span><ArrowRight size={14} /></button>
+          </>
+        )}
+      />
 
       {/* Tabs */}
       <div className="ca-simple-tabs">
@@ -183,7 +177,7 @@ ${scenes.map(s => `## ${s.type}: ${s.title}\n${s.action}\n\n${s.dialogue}\n`).jo
                 type="text" 
                 value={hero.name} 
                 onChange={e => setHero({ ...hero, name: e.target.value })}
-                placeholder="e.g. Aarav Sharma"
+                placeholder="e.g. Kai Rivera"
               />
             </div>
 
@@ -237,7 +231,7 @@ ${scenes.map(s => `## ${s.type}: ${s.title}\n${s.action}\n\n${s.dialogue}\n`).jo
               disabled={isGenerating}
             >
               <Sparkles size={16} />
-              <span>{isGenerating ? "Generating Script..." : "Generate 4-Scene Script with ChatGPT"}</span>
+              <span>{isGenerating ? "Generating Script..." : "Generate 4-Scene Script"}</span>
             </button>
           </div>
         </div>

@@ -18,7 +18,7 @@ export const EXAMPLE_TEMPLATES = [
     id: "chandrayaan",
     title: "🚀 Mission Chandrayaan 2085: Secret of the Lunar Water Vault",
     shortTitle: "Chandrayaan 2085",
-    tag: "ISRO Space Exploration",
+    tag: "Space exploration",
     icon: Rocket,
     color: "#0284C7",
     description: "Astronaut cadets protecting hidden ice reserves in the Moon's South Pole."

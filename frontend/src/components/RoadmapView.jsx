@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { PathSpot } from './illustrations/Illustrations';
+import { GameMap } from './GameMap';
+import { skillsForLevel } from '../data/skills';
 import { 
   Sparkles, 
   BookOpen, 
@@ -30,10 +33,10 @@ const ROADMAP_STATIONS = [
     id: "m1",
     title: "Story Writing Lab",
     subtitle: "Narrative Arc & World Building",
-    tool: "ChatGPT",
+    tool: "Story Studio",
     color: "#059669",
     glowColor: "#10B981",
-    heroImage: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&auto=format&fit=crop&q=80",
+    heroImage: "/images/level-1-story.webp",
     accentBg: "rgba(5, 150, 105, 0.08)",
     borderColor: "rgba(5, 150, 105, 0.3)",
     studioType: "story",
@@ -55,10 +58,10 @@ const ROADMAP_STATIONS = [
     id: "m2",
     title: "AI Research Core",
     subtitle: "Source-Grounded Fact Dossier",
-    tool: "NotebookLM",
-    color: "#4F46E5",
+    tool: "Research Lab",
+    color: "#6D4FD8",
     glowColor: "#3B82F6",
-    heroImage: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop&q=80",
+    heroImage: "/images/level-2-research.webp",
     accentBg: "rgba(37, 99, 235, 0.08)",
     borderColor: "rgba(37, 99, 235, 0.3)",
     studioType: "notebooklm",
@@ -80,10 +83,10 @@ const ROADMAP_STATIONS = [
     id: "m3",
     title: "Digital Art Studio",
     subtitle: "Concept Art & Character Keyframes",
-    tool: "Midjourney",
+    tool: "Visual Studio",
     color: "#7C3AED",
     glowColor: "#A855F7",
-    heroImage: "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&auto=format&fit=crop&q=80",
+    heroImage: "/images/level-3-visual.webp",
     accentBg: "rgba(124, 58, 237, 0.08)",
     borderColor: "rgba(124, 58, 237, 0.3)",
     studioType: "visual",
@@ -105,10 +108,10 @@ const ROADMAP_STATIONS = [
     id: "m4",
     title: "Motion & Animation Lab",
     subtitle: "Cinematic Trailer Reel",
-    tool: "Google Veo",
+    tool: "Motion Studio",
     color: "#DB2777",
     glowColor: "#F43F5E",
-    heroImage: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&auto=format&fit=crop&q=80",
+    heroImage: "/images/level-4-motion.webp",
     accentBg: "rgba(219, 39, 119, 0.08)",
     borderColor: "rgba(219, 39, 119, 0.3)",
     studioType: "motion",
@@ -133,7 +136,7 @@ const ROADMAP_STATIONS = [
     tool: "Web Studio",
     color: "#D97706",
     glowColor: "#F59E0B",
-    heroImage: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80",
+    heroImage: "/images/level-5-web.webp",
     accentBg: "rgba(217, 119, 6, 0.08)",
     borderColor: "rgba(217, 119, 6, 0.3)",
     studioType: "web-builder",
@@ -158,7 +161,7 @@ const ROADMAP_STATIONS = [
     tool: "Review & Cert",
     color: "#0284C7",
     glowColor: "#38BDF8",
-    heroImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80",
+    heroImage: "/images/level-6-final.webp",
     accentBg: "rgba(2, 132, 199, 0.08)",
     borderColor: "rgba(2, 132, 199, 0.3)",
     studioType: "capstone",
@@ -172,10 +175,13 @@ const ROADMAP_STATIONS = [
       { h: 21, name: "Pipeline Review", desc: "Audit full 5-tool creator flow" },
       { h: 22, name: "Portfolio Bundle", desc: "Package master deliverables zip" },
       { h: 23, name: "Mentor Rubric", desc: "Grade across 4 evaluative pillars" },
-      { h: 24, name: "Official Cert", desc: "Claim verifiable ATL certificate" }
+      { h: 24, name: "Official Cert", desc: "Claim your Kreomax certificate" }
     ]
   }
 ];
+
+
+const ISLAND_POS = [[28, 62], [12, 36], [31, 22], [47, 27], [71, 27], [87, 20]];
 
 export function RoadmapView({
   completedHours = [],
@@ -222,12 +228,13 @@ export function RoadmapView({
               title="Change or create your original project theme"
             >
               <Edit3 size={12} />
-              <span>Change / Create Theme</span>
+              <span>Change</span>
             </button>
           </div>
         </div>
 
         {/* Gamified Summary Stats */}
+        <PathSpot className="ca-spot ca-spot--hero" />
         <div className="ca-roadmap-stats-card">
           <div className="ca-stat-item">
             <div className="ca-stat-num">{totalCompleted}<span className="ca-stat-max">/24</span></div>
@@ -263,6 +270,33 @@ export function RoadmapView({
           </div>
         </div>
       </div>
+
+      {/* Island map: progress-aware journey */}
+      <GameMap
+        image="/images/game-map-islands.webp"
+        alt="Illustrated floating-island map showing the six creator levels connected by a glowing path"
+        width={1600}
+        height={889}
+        legendTitle="Your journey"
+        markers={ROADMAP_STATIONS.map((st, i) => {
+          const done = st.hours.every((h) => completedHours.includes(h));
+          const current = currentStation.id === st.id;
+          return {
+            id: st.id,
+            label: String(st.level),
+            title: st.title,
+            output: done ? 'Completed' : current ? 'In progress' : 'Upcoming',
+            color: st.color,
+            x: ISLAND_POS[i][0],
+            y: ISLAND_POS[i][1],
+            state: done ? 'done' : current ? 'current' : 'locked',
+          };
+        })}
+        onSelect={(m) => {
+          const st = ROADMAP_STATIONS.find((x) => x.id === m.id);
+          if (st) onLaunchStudio(st.studioType);
+        }}
+      />
 
       {/* PICTORIAL JOURNEY BOARD: 6 Illustrated Visual Stations */}
       <div className="ca-pictorial-board">
@@ -323,7 +357,7 @@ export function RoadmapView({
                 <div 
                   className="ca-power-gradient-overlay" 
                   style={{ 
-                    background: `linear-gradient(180deg, rgba(15, 23, 42, 0.05) 0%, rgba(15, 23, 42, 0.3) 45%, rgba(15, 23, 42, 0.9) 100%)` 
+                    background: `linear-gradient(180deg, rgba(36, 28, 61, 0) 0%, rgba(36, 28, 61, 0.1) 55%, rgba(36, 28, 61, 0.55) 100%)` 
                   }}
                 />
 
@@ -362,6 +396,13 @@ export function RoadmapView({
                 <div className="ca-station-deliv-line">
                   <Sparkles size={12} style={{ color: station.color, flexShrink: 0 }} />
                   <span className="ca-deliv-text"><strong>Output:</strong> {station.deliverable}</span>
+                </div>
+
+                {/* Thinking skills practised in this level */}
+                <div className="ca-skill-chips" aria-label="Thinking skills practised in this level">
+                  {skillsForLevel(station.level).map((sk) => (
+                    <span key={sk.id} className="ca-skill-chip" style={{ '--sk-color': sk.color }}>{sk.short}</span>
+                  ))}
                 </div>
 
                 {/* 4-Hour Compact Stepping Strip */}
@@ -449,9 +490,9 @@ function renderStationIllustration(type, primaryColor) {
           {/* Scroll / Manuscript */}
           <rect x="40" y="28" width="130" height="74" rx="8" fill="#FFFFFF" stroke="#059669" strokeWidth="1.5" />
           <line x1="56" y1="44" x2="144" y2="44" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="56" y1="58" x2="130" y2="58" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" />
-          <line x1="56" y1="70" x2="140" y2="70" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" />
-          <line x1="56" y1="82" x2="110" y2="82" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" />
+          <line x1="56" y1="58" x2="130" y2="58" stroke="#9D95B5" strokeWidth="2" strokeLinecap="round" />
+          <line x1="56" y1="70" x2="140" y2="70" stroke="#9D95B5" strokeWidth="2" strokeLinecap="round" />
+          <line x1="56" y1="82" x2="110" y2="82" stroke="#9D95B5" strokeWidth="2" strokeLinecap="round" />
 
           {/* AI Quill / Sparkle Pen */}
           <path d="M210 30 L245 65 L215 95 L200 85 Z" fill="#059669" opacity="0.85" />
@@ -462,7 +503,7 @@ function renderStationIllustration(type, primaryColor) {
           
           {/* Floating Dialogue Cloud */}
           <rect x="190" y="45" width="85" height="32" rx="16" fill="#ECFDF5" stroke="#10B981" strokeWidth="1.2" />
-          <text x="232" y="66" textAnchor="middle" fill="#065F46" fontSize="11" fontWeight="700" fontFamily="sans-serif">ChatGPT</text>
+          <text x="232" y="66" textAnchor="middle" fill="#065F46" fontSize="11" fontWeight="700" fontFamily="sans-serif">Story</text>
         </svg>
       );
 
@@ -471,31 +512,31 @@ function renderStationIllustration(type, primaryColor) {
         <svg viewBox="0 0 320 130" className="ca-station-svg" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="resGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#4F46E5" stopOpacity="0.2" />
+              <stop offset="0%" stopColor="#6D4FD8" stopOpacity="0.2" />
               <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.05" />
             </linearGradient>
           </defs>
-          <rect x="10" y="10" width="300" height="110" rx="12" fill="url(#resGrad)" stroke="#4F46E5" strokeWidth="1.2" strokeDasharray="3 3" />
+          <rect x="10" y="10" width="300" height="110" rx="12" fill="url(#resGrad)" stroke="#6D4FD8" strokeWidth="1.2" strokeDasharray="3 3" />
           
           {/* Central Knowledge Node */}
-          <circle cx="160" cy="65" r="26" fill="#EEF2FF" stroke="#4F46E5" strokeWidth="2" />
-          <circle cx="160" cy="65" r="14" fill="#4F46E5" />
+          <circle cx="160" cy="65" r="26" fill="#EEF2FF" stroke="#6D4FD8" strokeWidth="2" />
+          <circle cx="160" cy="65" r="14" fill="#6D4FD8" />
           
           {/* Orbiting Satellite Data Pods */}
           <line x1="160" y1="65" x2="80" y2="40" stroke="#93C5FD" strokeWidth="1.5" strokeDasharray="2 2" />
-          <circle cx="80" cy="40" r="16" fill="#FFFFFF" stroke="#4F46E5" strokeWidth="1.5" />
+          <circle cx="80" cy="40" r="16" fill="#FFFFFF" stroke="#6D4FD8" strokeWidth="1.5" />
           <text x="80" y="44" textAnchor="middle" fill="#1E40AF" fontSize="9" fontWeight="700">PDF</text>
 
           <line x1="160" y1="65" x2="240" y2="45" stroke="#93C5FD" strokeWidth="1.5" strokeDasharray="2 2" />
-          <circle cx="240" cy="45" r="16" fill="#FFFFFF" stroke="#4F46E5" strokeWidth="1.5" />
+          <circle cx="240" cy="45" r="16" fill="#FFFFFF" stroke="#6D4FD8" strokeWidth="1.5" />
           <text x="240" y="49" textAnchor="middle" fill="#1E40AF" fontSize="9" fontWeight="700">FACT</text>
 
           <line x1="160" y1="65" x2="110" y2="95" stroke="#93C5FD" strokeWidth="1.5" strokeDasharray="2 2" />
-          <circle cx="110" cy="95" r="14" fill="#FFFFFF" stroke="#4F46E5" strokeWidth="1.5" />
+          <circle cx="110" cy="95" r="14" fill="#FFFFFF" stroke="#6D4FD8" strokeWidth="1.5" />
           <text x="110" y="99" textAnchor="middle" fill="#1E40AF" fontSize="8" fontWeight="700">CITE</text>
 
           <line x1="160" y1="65" x2="225" y2="92" stroke="#93C5FD" strokeWidth="1.5" strokeDasharray="2 2" />
-          <circle cx="225" cy="92" r="14" fill="#FFFFFF" stroke="#4F46E5" strokeWidth="1.5" />
+          <circle cx="225" cy="92" r="14" fill="#FFFFFF" stroke="#6D4FD8" strokeWidth="1.5" />
           <text x="225" y="96" textAnchor="middle" fill="#1E40AF" fontSize="8" fontWeight="700">AUDIO</text>
         </svg>
       );
@@ -528,7 +569,7 @@ function renderStationIllustration(type, primaryColor) {
           <circle cx="255" cy="62" r="5" fill="#3B82F6" />
           <circle cx="255" cy="82" r="5" fill="#10B981" />
           <circle cx="235" cy="92" r="5" fill="#F59E0B" />
-          <circle cx="218" cy="85" r="4.5" fill="#F1F5F9" stroke="#7C3AED" strokeWidth="1" />
+          <circle cx="218" cy="85" r="4.5" fill="#F1ECFB" stroke="#7C3AED" strokeWidth="1" />
         </svg>
       );
 
@@ -545,7 +586,7 @@ function renderStationIllustration(type, primaryColor) {
           
           {/* Film Strip Frame */}
           <rect x="40" y="32" width="140" height="68" rx="8" fill="#1E293B" stroke="#DB2777" strokeWidth="1.5" />
-          <rect x="48" y="42" width="124" height="48" rx="4" fill="#0F172A" />
+          <rect x="48" y="42" width="124" height="48" rx="4" fill="#241C3D" />
           {/* Play Triangle */}
           <polygon points="105,56 122,66 105,76" fill="#DB2777" />
           {/* Perforations */}
@@ -561,7 +602,7 @@ function renderStationIllustration(type, primaryColor) {
           <line x1="225" y1="40" x2="235" y2="56" stroke="#FFFFFF" strokeWidth="2.5" />
           <line x1="245" y1="40" x2="255" y2="56" stroke="#FFFFFF" strokeWidth="2.5" />
           <line x1="265" y1="40" x2="275" y2="56" stroke="#FFFFFF" strokeWidth="2.5" />
-          <text x="245" y="78" textAnchor="middle" fill="#DB2777" fontSize="10" fontWeight="700">VEO 4K</text>
+          <text x="245" y="78" textAnchor="middle" fill="#DB2777" fontSize="10" fontWeight="700">HD 4K</text>
         </svg>
       );
 
@@ -586,9 +627,9 @@ function renderStationIllustration(type, primaryColor) {
 
           {/* Web layout skeleton */}
           <rect x="50" y="48" width="60" height="24" rx="4" fill="#FDE68A" />
-          <rect x="118" y="48" width="62" height="10" rx="2" fill="#E2E8F0" />
-          <rect x="118" y="62" width="45" height="8" rx="2" fill="#E2E8F0" />
-          <rect x="50" y="78" width="130" height="18" rx="3" fill="#F1F5F9" />
+          <rect x="118" y="48" width="62" height="10" rx="2" fill="#E7E0F5" />
+          <rect x="118" y="62" width="45" height="8" rx="2" fill="#E7E0F5" />
+          <rect x="50" y="78" width="130" height="18" rx="3" fill="#F1ECFB" />
 
           {/* Floating Mobile Device */}
           <rect x="220" y="32" width="45" height="74" rx="7" fill="#FFFFFF" stroke="#D97706" strokeWidth="1.6" />

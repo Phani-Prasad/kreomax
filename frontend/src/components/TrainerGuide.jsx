@@ -18,14 +18,14 @@ const TRAINER_TIPS = {
     ],
     rubricItems: [
       "Hero profile created with Name, Superpower, and Flaw",
-      "4-part ChatGPT prompt formula tested and refined",
+      "4-part AI prompt formula tested and refined",
       "4 complete scenes with sluglines and dialogue",
       "Visual art prompts ready for Level 3 concept art"
     ],
     quickPills: [
       "How do I give my hero a great flaw?",
       "Can you review my 4-part prompt formula?",
-      "How to prevent ChatGPT from giving cliché endings?",
+      "How to prevent AI from giving cliché endings?",
       "What is needed to earn Badge 1?"
     ]
   },
@@ -46,7 +46,7 @@ const TRAINER_TIPS = {
       "Research brief downloaded for Capstone vault"
     ],
     quickPills: [
-      "How do NotebookLM citations prevent hallucinations?",
+      "How do citations prevent hallucinations?",
       "How can I turn a scientific fact into a story conflict?",
       "How do I ingest custom mission notes?",
       "What is needed to earn Badge 2?"
@@ -146,7 +146,7 @@ export function TrainerGuide({
   const [messages, setMessages] = useState([
     {
       sender: 'trainer',
-      text: "Namaste! I am Dr. Vikram Rao, your assigned AI & Space Innovation Mentor. Whenever you need guidance on prompt formulas, hero storytelling, or level rubrics, just ask me here!",
+      text: "Hi! I am your Kreomax Mentor, an AI guide for your project. Whenever you need help with prompt formulas, hero storytelling or level rubrics, just ask me here!",
       time: "Just now"
     }
   ]);
@@ -238,18 +238,18 @@ export function TrainerGuide({
           <div className="ca-trainer-profile">
             <div className="ca-trainer-avatar-wrap">
               <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" 
-                alt="Dr. Vikram Rao" 
+                src="/images/mascot-wave.webp" 
+                alt="Kreomax Mentor" 
                 className="ca-trainer-avatar"
               />
               <span className="ca-trainer-status-dot" title="Trainer Online" />
             </div>
             <div className="ca-trainer-meta">
               <div className="ca-trainer-name-row">
-                <h3>Dr. Vikram Rao</h3>
-                <span className="ca-trainer-badge">Assigned LMS Mentor</span>
+                <h3>Kreomax Mentor</h3>
+                <span className="ca-trainer-badge">AI mentor</span>
               </div>
-              <p className="ca-trainer-sub">ISRO Senior Scientist & Master AI Educator</p>
+              <p className="ca-trainer-sub">Guidance for your project, level by level</p>
             </div>
           </div>
           <button className="ca-trainer-close-btn" onClick={onClose} aria-label="Close mentor panel">
@@ -305,7 +305,7 @@ export function TrainerGuide({
             <div className="ca-trainer-card">
               <div className="ca-trainer-card-header">
                 <Zap size={16} className="text-amber" />
-                <h4>Dr. Vikram's Golden Rules for this Level</h4>
+                <h4>Golden rules for this level</h4>
               </div>
               <div className="ca-trainer-rules-list">
                 {tipData.goldenRules.map((rule, idx) => (
@@ -378,14 +378,14 @@ export function TrainerGuide({
               {messages.map((msg, idx) => (
                 <div key={idx} className={`ca-trainer-msg-bubble ${msg.sender}`}>
                   <div className="ca-msg-sender-label">
-                    {msg.sender === 'trainer' ? '🎓 Dr. Vikram Rao' : `👤 ${userProfile?.name || 'You'}`}
+                    {msg.sender === 'trainer' ? '🎓 Kreomax Mentor' : `👤 ${userProfile?.name || 'You'}`}
                   </div>
                   <div className="ca-msg-text">{msg.text}</div>
                 </div>
               ))}
               {isLoading && (
                 <div className="ca-trainer-msg-bubble trainer loading">
-                  <div className="ca-msg-sender-label">🎓 Dr. Vikram Rao</div>
+                  <div className="ca-msg-sender-label">🎓 Kreomax Mentor</div>
                   <div className="ca-typing-dots">
                     <span /><span /><span />
                   </div>
@@ -417,7 +417,7 @@ export function TrainerGuide({
             >
               <input 
                 type="text"
-                placeholder="Ask Dr. Vikram Rao for prompt advice or script tips..."
+                placeholder="Ask your mentor for prompt advice or script tips..."
                 value={inputText}
                 onChange={e => setInputText(e.target.value)}
                 disabled={isLoading}

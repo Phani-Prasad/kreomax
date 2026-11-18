@@ -1,0 +1,67 @@
+.hc { position: relative; max-width: 1280px; margin: 0 auto; }
+.hc-stage {
+  display: grid; grid-template-columns: minmax(0, 1fr); border-radius: 30px; overflow: hidden; background: #EDE6FF;
+  border: 1px solid #E7E0F5; box-shadow: 0 30px 60px -28px rgba(109, 79, 216, 0.45);
+}
+.hc-slide {
+  grid-area: 1 / 1; position: relative; aspect-ratio: 2 / 1;
+  opacity: 0; pointer-events: none; transition: opacity 0.7s ease;
+}
+.hc-slide--active { opacity: 1; pointer-events: auto; }
+.hc-art { position: absolute; inset: 0; }
+.hc-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.hc-caption {
+  position: absolute; transform: translate(-50%, -50%); padding: 4px 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92); color: #241C3D; font: 700 clamp(0.62rem, 1.05vw, 0.85rem)/1.3 'Inter', sans-serif;
+  white-space: nowrap; box-shadow: 0 6px 16px -6px rgba(36, 28, 61, 0.35);
+  opacity: 0; transition: opacity 0.5s ease 0.35s;
+}
+.hc-slide--active .hc-caption { opacity: 1; }
+
+.hc-copy {
+  position: absolute; left: clamp(1.5rem, 3.6vw, 3.5rem); top: 50%; transform: translateY(-50%);
+  width: min(37%, 480px); display: grid; gap: 0.9rem; justify-items: start;
+}
+.hc-copy--top { top: 7%; transform: none; }
+.hc-eyebrow { font: 700 0.78rem/1 'Inter', sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #6D4FD8; margin: 0; }
+.hc-title {
+  margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; letter-spacing: -0.03em;
+  font-size: clamp(1.7rem, 3.1vw, 2.85rem); line-height: 1.1; color: #241C3D;
+}
+.hc-accent { background: linear-gradient(135deg, #6D4FD8, #4C7DFF); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.hc-body { margin: 0; color: #4F4768; font-size: clamp(0.86rem, 1.1vw, 1rem); line-height: 1.6; }
+.hc-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 0.4rem; }
+
+.hc-controls {
+  display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 14px;
+}
+.hc-dots { display: flex; gap: 8px; }
+.hc-dot { width: 10px; height: 10px; border-radius: 999px; border: 0; padding: 0; cursor: pointer; background: #C9B8F5; transition: width 0.25s ease, background 0.25s ease; }
+.hc-dot--active { width: 30px; background: #6D4FD8; }
+.hc-icon-btn {
+  display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+  background: #fff; border: 1px solid #E7E0F5; color: #433A5E; transition: background 0.2s ease;
+}
+.hc-icon-btn:hover { background: #F1ECFB; }
+.hc-dot:focus-visible, .hc-icon-btn:focus-visible { outline: 3px solid #4C7DFF; outline-offset: 2px; }
+
+@media (max-width: 1000px) {
+  .hc-copy--top { top: auto; }
+  .hc-slide { aspect-ratio: auto; display: flex; flex-direction: column; background: #fff; }
+  .hc-art { position: relative; inset: auto; aspect-ratio: 2 / 1; flex: none; }
+  .hc-copy { position: static; transform: none; width: auto; padding: 1.4rem 1.3rem 1.6rem; }
+  .hc-stage { border-radius: 22px; }
+  .hc-caption { padding: 2px 8px; font-size: 0.6rem; }
+}
+@media (max-width: 600px) { .hc-caption { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .hc-slide, .hc-caption { transition: none; }
+}
+
+/* The centre cube is Kreomax itself: a bolder brand label than the audience captions */
+.hc-caption--brand {
+  padding: 7px 18px; background: linear-gradient(135deg, #6D4FD8, #4C7DFF); color: #fff; letter-spacing: 0.16em;
+  font-size: clamp(0.7rem, 1.2vw, 0.95rem); border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 12px 26px -8px rgba(109, 79, 216, 0.7);
+}

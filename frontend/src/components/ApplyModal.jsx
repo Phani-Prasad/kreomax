@@ -5,74 +5,22 @@ import {
   Sparkles,
   Calendar,
   Clock,
-  User,
   Users,
-  Award,
-  ArrowRight,
   MessageCircle,
   Send,
-  PhoneCall,
   CheckCircle2,
   GraduationCap
 } from 'lucide-react';
-import './PaymentModal.css';
+import { usePlans } from '../hooks/usePlans';
+import './ApplyModal.css';
 
-const DEFAULT_PLANS = [
-  {
-    id: "cohort-24h",
-    name: "Creator Cohort",
-    badge: "Most Popular · 2 Months",
-    duration: "24 Hours (Weekend Cohort)",
-    schedule: "Sat & Sun · 1.5 hrs / session",
-    tagline: "Collaborative live cohort for students (ages 12+) building real AI projects together.",
-    price: 4999,
-    originalPrice: 9999,
-    popular: true,
-    accentColor: "#7C3AED",
-    icon: Users,
-    deliverables: "5 Real Deliverables (Script + Art + Reel + Web + Capstone)",
-    features: [
-      "24 Guided Hours over 2 Months (Weekends)",
-      "Live interactive build sessions across all 6 AI Studios",
-      "Real Deliverables: Screenplay, Art Pack, Trailer, Website",
-      "Live Peer Reviews & Class Demo Day Premiere",
-      "100-Point Rubric Mentor Evaluation",
-      "Verified ATL & Kreomax Creator Credential"
-    ],
-    cta: "Apply for Creator Cohort"
-  },
-  {
-    id: "training-1on1-30h",
-    name: "1:1 Creator Mentorship",
-    badge: "Elite · Dedicated Mentor",
-    duration: "30 Hours Personalized",
-    schedule: "Flexible 1:1 Schedule (Weekdays / Weekends)",
-    tagline: "Dedicated private mentoring with a senior AI specialist customized to student's pace.",
-    price: 14999,
-    originalPrice: 24999,
-    popular: false,
-    accentColor: "#4F46E5",
-    icon: User,
-    deliverables: "Custom Portfolio + Advanced Audio/Video + Recommendation",
-    features: [
-      "30 Hours of Dedicated 1-on-1 Private Sessions",
-      "Personalized Creative Track (Sci-Fi, Anime, Gaming, Web)",
-      "6 Extra Deep-Dive Hours: Advanced Prompting & Audio FX",
-      "Direct 1:1 Portfolio Build & Live Deployment Support",
-      "Priority Capstone Grading with Personalized Video Review",
-      "Official Letter of Recommendation & Creator Credential"
-    ],
-    cta: "Apply for 1:1 Mentorship"
-  }
-];
-
-export function PaymentModal({
+export function ApplyModal({
   isOpen,
   onClose,
-  onSuccessUnlock
+  initialPlanId
 }) {
-  const [plans, setPlans] = useState(DEFAULT_PLANS);
-  const [selectedPlanId, setSelectedPlanId] = useState("cohort-24h");
+  const { plans, web3formsKey } = usePlans(isOpen);
+  const [selectedPlanId, setSelectedPlanId] = useState(initialPlanId || "cohort-24h");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [applicationSuccess, setApplicationSuccess] = useState(null);
@@ -82,38 +30,15 @@ export function PaymentModal({
   const [studentEmail, setStudentEmail] = useState("");
   const [studentPhone, setStudentPhone] = useState("");
   const [studentGrade, setStudentGrade] = useState("Grade 8");
-  const [web3formsKey, setWeb3formsKey] = useState("");
 
   // Reset application state whenever modal is opened
   useEffect(() => {
     if (isOpen) {
       setApplicationSuccess(null);
       setErrorMsg(null);
+      if (initialPlanId) setSelectedPlanId(initialPlanId);
     }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    fetch('/api/payment/config')
-      .then(r => r.json())
-      .then(data => {
-        if (data.web3formsKey) setWeb3formsKey(data.web3formsKey);
-        if (data.status === 'success' && data.plans && data.plans.length > 0) {
-          const merged = data.plans.map(p => {
-            const match = DEFAULT_PLANS.find(d => d.id === p.id);
-            return {
-              ...match,
-              ...p,
-              accentColor: match ? match.accentColor : '#7C3AED',
-              icon: match ? match.icon : Users,
-              deliverables: match ? match.deliverables : 'All Deliverables'
-            };
-          });
-          setPlans(merged);
-        }
-      })
-      .catch(() => {});
-  }, [isOpen]);
+  }, [isOpen, initialPlanId]);
 
   if (!isOpen) return null;
 
@@ -121,7 +46,7 @@ export function PaymentModal({
 
   // Direct WhatsApp Inquiry
   const handleOpenWhatsApp = () => {
-    const text = `Hi Kreomax Admissions! I am interested in enrolling for the *${selectedPlan.name}* (${selectedPlan.duration}). Please share the upcoming batch start date, weekend schedule, and fee payment link. My Name: ${studentName || 'Student'}, Phone: ${studentPhone || 'N/A'}`;
+    const text = `Hi Kreomax Admissions! I am interested in enrolling for the *${selectedPlan.name}* (${selectedPlan.duration}). Please share the upcoming batch start date, schedule and fee details. My Name: ${studentName || 'Student'}, Phone: ${studentPhone || 'N/A'}`;
     const url = `https://wa.me/918310590859?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -159,7 +84,6 @@ export function PaymentModal({
           applicationId: data.applicationId,
           planName: selectedPlan.name,
           duration: selectedPlan.duration,
-          price: selectedPlan.price,
           phone: studentPhone,
           whatsappUrl: data.whatsappUrl
         });
@@ -232,7 +156,7 @@ export function PaymentModal({
               <div className="km-notice-content">
                 <strong>What happens next?</strong>
                 <p>
-                  Our admissions counselor will contact you via WhatsApp / Call at <strong>{applicationSuccess.phone}</strong> within 24 hours to confirm your batch timings, orientation schedule, and fee payment details.
+                  Our admissions counselor will contact you via WhatsApp / Call at <strong>{applicationSuccess.phone}</strong> within 24 hours to confirm your batch timings, orientation schedule and fee details.
                 </p>
               </div>
             </div>
@@ -257,7 +181,7 @@ export function PaymentModal({
             <div className="km-pay-header">
               <div className="km-pay-badge">
                 <Sparkles size={13} />
-                <span>Admissions Open · Limited Batch Seats</span>
+                <span>Applications open</span>
               </div>
               <h2 className="km-pay-title">
                 Choose Your <span className="klp-gradient-text">Creator Pathway</span>
@@ -279,7 +203,6 @@ export function PaymentModal({
               {plans.map(plan => {
                 const IconComponent = plan.icon || Users;
                 const isSelected = selectedPlanId === plan.id;
-                const discount = Math.round(((plan.originalPrice - plan.price) / plan.originalPrice) * 100);
 
                 return (
                   <div
@@ -309,17 +232,6 @@ export function PaymentModal({
                     <div className="km-pay-card-schedule">
                       <Calendar size={13} />
                       <span>{plan.schedule}</span>
-                    </div>
-
-                    <div className="km-pay-card-pricing">
-                      <div className="km-price-val">
-                        <span className="km-currency">₹</span>
-                        <span className="km-num">{plan.price.toLocaleString('en-IN')}</span>
-                      </div>
-                      <div className="km-price-meta">
-                        <span className="km-orig-price">₹{plan.originalPrice.toLocaleString('en-IN')}</span>
-                        <span className="km-discount-pill">{discount}% OFF</span>
-                      </div>
                     </div>
 
                     <p className="km-pay-card-desc">{plan.tagline}</p>
@@ -404,9 +316,6 @@ export function PaymentModal({
                 <div className="km-pay-summary">
                   <span className="km-summary-label">Selected Track:</span>
                   <span className="km-summary-name">{selectedPlan.name}</span>
-                  <span className="km-summary-price">
-                    ₹{selectedPlan.price.toLocaleString('en-IN')}
-                  </span>
                 </div>
 
                 <div className="km-pay-btn-group">
@@ -425,11 +334,11 @@ export function PaymentModal({
                     disabled={loading}
                   >
                     {loading ? (
-                      <span className="km-spinner">Submitting Application...</span>
+                      <span className="km-spinner">Sending...</span>
                     ) : (
                       <>
                         <Send size={15} />
-                        Pre-Register for {selectedPlan.name}
+                        Apply for {selectedPlan.name}
                       </>
                     )}
                   </button>
@@ -444,4 +353,4 @@ export function PaymentModal({
   );
 }
 
-export default PaymentModal;
+export default ApplyModal;

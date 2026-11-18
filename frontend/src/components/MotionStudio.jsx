@@ -17,6 +17,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import './MotionStudio.css';
+import { StudioHeader } from './StudioHeader';
 
 export function MotionStudio({ 
   projectTheme, 
@@ -63,25 +64,25 @@ export function MotionStudio({
       title: "Scene 1: Lunar Base Signal",
       camera: "Slow Zoom In + Star Drift",
       duration: 8,
-      thumb: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=600&auto=format&fit=crop&q=80",
+      thumb: "/images/game-map-islands.webp",
       motionPrompt: "Image-to-video: Gentle slow camera push-in across lunar crater, Earth rising in background, visor reflecting starlight.",
-      voiceover: "ISRO Base Bengaluru, do you copy? The deep ice scanner just discovered an encrypted signal!"
+      voiceover: "Mission Control, do you copy? The deep ice scanner just discovered an encrypted signal!"
     },
     {
       id: 2,
       title: "Scene 2: Ancient Ice Vault",
       camera: "Slide Camera Right",
       duration: 8,
-      thumb: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80",
+      thumb: "/images/kreomax-city.webp",
       motionPrompt: "Image-to-video: Camera tracks right along glowing crystal ice formations, golden telemetry LED indicators pulsing rhythmically.",
-      voiceover: "Careful Aarav. That inscription predates our lunar colony by centuries!"
+      voiceover: "Careful, Kai. That inscription predates our lunar colony by centuries!"
     },
     {
       id: 3,
       title: "Scene 3: Solar Rover Chase",
       camera: "Fast Action Camera Orbit",
       duration: 8,
-      thumb: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=600&auto=format&fit=crop&q=80",
+      thumb: "/images/hero-slide-1.webp",
       motionPrompt: "Image-to-video: High-speed camera tracking beside solar rover racing across moon crater ridge, searchlights piercing stardust.",
       voiceover: "Hold on tight! Activating the magnetic thrusters now!"
     },
@@ -90,7 +91,7 @@ export function MotionStudio({
       title: "Scene 4: Golden Earthrise",
       camera: "Fly Upward to the Cosmos",
       duration: 8,
-      thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop&q=80",
+      thumb: "/images/hero-slide-3.webp",
       motionPrompt: "Image-to-video: Slow crane up revealing expansive golden Earthrise above lunar horizon behind solitary astronaut silhouette.",
       voiceover: "We decoded it! The water vault is secured for every future astronaut!"
     }
@@ -127,7 +128,7 @@ export function MotionStudio({
     const metaTxt = `KREOMAX - 32-SECOND MOVIE TRAILER
 Project: ${projectTheme}
 Creator: Young Creator (Age 12+)
-Animation Engine: Google Veo / Runway
+Studio: Kreomax Motion Studio
 Total Length: 32 Seconds (4 Scenes)
 Audio: Adventure Music Track + Hero Voiceover Narration
 Resolution: 1080p Full HD (24 FPS)
@@ -149,27 +150,17 @@ Scenes Breakdown:
 
   return (
     <div className="ca-motion-container">
-      {/* Header */}
-      <div className="ca-motion-header glass-panel">
-        <div className="ca-motion-title-row">
-          <div className="ca-tool-badge badge-pink">
-            <Video size={14} />
-            <span>LEVEL 4 · GOOGLE VEO</span>
-          </div>
-          <div className="ca-btn-group">
-            <button className="btn-secondary btn-sm" onClick={handleDownloadVideo}>
-              <Download size={14} />
-              <span>Export</span>
-            </button>
-            <button className="btn-primary btn-sm" onClick={onNavigateNext}>
-              <span>Level 5</span>
-              <ArrowRight size={14} />
-            </button>
-          </div>
-        </div>
-
-        <h2 className="ca-motion-title">Video & Animation</h2>
-      </div>
+      <StudioHeader
+        level={4}
+        title="Video & Animation"
+        subtitle="Direct camera moves and turn your scenes into a trailer."
+        actions={(
+          <>
+            <button className="btn-secondary btn-sm" onClick={handleDownloadVideo}><Download size={14} /><span>Export</span></button>
+            <button className="btn-primary btn-sm" onClick={onNavigateNext}><span>Next: Level 5</span><ArrowRight size={14} /></button>
+          </>
+        )}
+      />
 
       {/* Main Studio Grid */}
       <div className="ca-motion-grid">
@@ -189,7 +180,7 @@ Scenes Breakdown:
             </div>
 
             <div className="ca-player-watermark">
-              GOOGLE VEO 1080P
+              KREOMAX 1080P
             </div>
 
             {/* Voiceover Subtitle Banner */}
@@ -258,7 +249,7 @@ Scenes Breakdown:
 
           {/* Camera Moves */}
           <div className="ca-control-group">
-            <label className="ca-ctrl-lbl">Pick Camera Movement (Google Veo)</label>
+            <label className="ca-ctrl-lbl">Pick Camera Movement</label>
             <div className="ca-chip-row">
               {['Slow Cinematic Zoom In', 'Slide Camera Left/Right', '360 Spin Orbit', 'Fly Upward (Crane)', 'Fast Action Fly-Through'].map(cm => (
                 <button 
@@ -321,18 +312,18 @@ Scenes Breakdown:
                 {isGeneratingVoice ? (
                   <>
                     <RefreshCw size={13} className="animate-spin text-purple" />
-                    <span>Synthesizing Voiceover with ElevenLabs...</span>
+                    <span>Synthesizing AI voiceover...</span>
                   </>
                 ) : (
                   <>
                     <Sparkles size={13} className="text-purple" />
-                    <span>Generate Scene Voiceover with ElevenLabs</span>
+                    <span>Generate Scene Voiceover</span>
                   </>
                 )}
               </button>
               {elevenVoiceUrl && (
                 <div style={{ marginTop: '6px', fontSize: '0.72rem', color: '#34D399', textAlign: 'center' }}>
-                  ✓ ElevenLabs Audio Loaded & Ready
+                  ✓ Voiceover Loaded & Ready
                 </div>
               )}
             </div>
