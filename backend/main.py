@@ -5,17 +5,17 @@ import urllib.error
 import urllib.parse
 import base64
 import re
-import hmac
-import hashlib
 import time
-import uuid
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import List, Optional, Dict, Any
-from fastapi import FastAPI, HTTPException, Body
+import html
+from fastapi import FastAPI, HTTPException, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+import access
+from security import require_admin, ai_limit, form_limit, access_limit
 
 from curriculum_data import MODULES
 
@@ -53,17 +53,18 @@ def send_email_notification(record: dict) -> bool:
     admin_recipient = os.environ.get("ADMIN_EMAIL", "kreomax9@gmail.com").strip()
     subject = f"🎓 New Kreomax Lead: {record['studentName']} – {record['planName']}"
 
+    esc = {k: html.escape(str(v)) for k, v in record.items()}
     html_body = f"""
     <html><body style="font-family: Arial, sans-serif; background:#f5f5f5; padding:20px;">
       <div style="max-width:520px; margin:auto; background:#fff; border-radius:10px; padding:28px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
         <h2 style="color:#6c3fcf; margin-top:0;">🎓 New Student Application</h2>
         <table style="width:100%; border-collapse:collapse; font-size:15px;">
-          <tr><td style="padding:8px 0; color:#888; width:130px;">Application ID</td><td style="font-weight:bold; color:#333;">{record['applicationId']}</td></tr>
-          <tr><td style="padding:8px 0; color:#888;">Student Name</td><td style="font-weight:bold; color:#333;">{record['studentName']}</td></tr>
-          <tr><td style="padding:8px 0; color:#888;">Phone</td><td style="color:#333;">{record['studentPhone']}</td></tr>
-          <tr><td style="padding:8px 0; color:#888;">Email</td><td style="color:#333;">{record.get('studentEmail') or 'Not provided'}</td></tr>
-          <tr><td style="padding:8px 0; color:#888;">Grade</td><td style="color:#333;">{record.get('studentGrade', 'N/A')}</td></tr>
-          <tr><td style="padding:8px 0; color:#888;">Plan</td><td style="color:#2ecc71; font-weight:bold;">{record['planName']}</td></tr>
+          <tr><td style="padding:8px 0; color:#888; width:130px;">Application ID</td><td style="font-weight:bold; color:#333;">{esc['applicationId']}</td></tr>
+          <tr><td style="padding:8px 0; color:#888;">Student Name</td><td style="font-weight:bold; color:#333;">{esc['studentName']}</td></tr>
+          <tr><td style="padding:8px 0; color:#888;">Phone</td><td style="color:#333;">{esc['studentPhone']}</td></tr>
+          <tr><td style="padding:8px 0; color:#888;">Email</td><td style="color:#333;">{esc.get('studentEmail') or 'Not provided'}</td></tr>
+          <tr><td style="padding:8px 0; color:#888;">Grade</td><td style="color:#333;">{esc.get('studentGrade', 'N/A')}</td></tr>
+          <tr><td style="padding:8px 0; color:#888;">Plan</td><td style="color:#2ecc71; font-weight:bold;">{esc['planName']}</td></tr>
           <tr><td style="padding:8px 0; color:#888;">Status</td><td style="color:#e67e22; font-weight:bold;">Pending Consultation</td></tr>
           <tr><td style="padding:8px 0; color:#888;">Submitted At</td><td style="color:#333;">{time.strftime('%d %b %Y at %I:%M %p IST')}</td></tr>
         </table>
@@ -190,23 +191,25 @@ app = FastAPI(
 # Enable CORS for frontend development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=[o.strip() for o in os.environ.get(
+        "ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:4173"
+    ).split(",") if o.strip()],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "X-Admin-Token", "X-Access-Code"],
 )
 
 # In-memory session store for learner profile & progress (with persistent fallback)
 LEARNER_PROFILE = {
-    "userId": "learner-101",
-    "name": "Aarav Sharma",
-    "email": "aarav.sharma@atl.gov.in",
-    "role": "ATL Student Innovator (Grade 8)",
-    "school": "Kendriya Vidyalaya / Bengaluru Public School",
-    "avatar": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=150&auto=format&fit=crop&q=80",
-    "completedHours": [1, 2, 3, 4],  # Demonstrates initial milestone progress
-    "activeHour": 5,
-    "theme": "🚀 Mission Chandrayaan 2085: Secret of the Lunar Water Vault",
+    "userId": "anonymous",
+    "name": "Creator",
+    "email": "",
+    "role": "Student creator",
+    "school": "",
+    "avatar": "",
+    "completedHours": [],
+    "activeHour": 1,
+    "theme": "My AI Adventure",
     "assets": {
         "researchBrief": None,
         "storyScript": None,
@@ -457,7 +460,7 @@ def gateway_status():
     e_key = get_active_elevenlabs_key()
 
     def mask(k):
-        return (k[:6] + "..." + k[-4:]) if (k and len(k) > 10) else ""
+        return ("••••" + k[-4:]) if (k and len(k) > 10) else ""
 
     return {
         "sso": True,
@@ -502,7 +505,7 @@ def gateway_status():
         }
     }
 
-@app.post("/api/ai/gateway/save-keys")
+@app.post("/api/ai/gateway/save-keys", dependencies=[Depends(require_admin)])
 def save_gateway_keys(payload: Dict[str, str] = Body(...)):
     global GATEWAY_KEYS, CUSTOM_API_KEY
     if "gemini" in payload:
@@ -538,7 +541,7 @@ def save_gateway_keys(payload: Dict[str, str] = Body(...)):
 def gemini_status():
     active_key = get_active_gemini_key()
     has_key = bool(active_key)
-    masked_key = (active_key[:6] + "..." + active_key[-4:]) if (has_key and len(active_key) > 10) else ""
+    masked_key = ("••••" + active_key[-4:]) if (has_key and len(active_key) > 10) else ""
     return {
         "configured": has_key,
         "maskedKey": masked_key,
@@ -546,12 +549,12 @@ def gemini_status():
         "source": "LMS Backend Proxy"
     }
 
-@app.post("/api/ai/set-key")
+@app.post("/api/ai/set-key", dependencies=[Depends(require_admin)])
 def set_gemini_key(payload: Dict[str, str] = Body(...)):
     return save_gateway_keys({"gemini": payload.get("apiKey", "")})
 
 # ElevenLabs Voiceover endpoint
-@app.post("/api/ai/elevenlabs-voice")
+@app.post("/api/ai/elevenlabs-voice", dependencies=[Depends(ai_limit), Depends(access.require_access)])
 def generate_elevenlabs_voice(payload: Dict[str, Any] = Body(...)):
     text = payload.get("text", "Welcome to Cognitive Academy.")
     voice_type = payload.get("voiceType", "elena")
@@ -580,7 +583,7 @@ def generate_elevenlabs_voice(payload: Dict[str, Any] = Body(...)):
     }
 
 # Real Image Generation endpoint
-@app.post("/api/ai/image-generate")
+@app.post("/api/ai/image-generate", dependencies=[Depends(ai_limit), Depends(access.require_access)])
 def generate_image_endpoint(payload: Dict[str, Any] = Body(...)):
     prompt = payload.get("prompt", "futuristic cyberpunk city")
     scene_number = payload.get("sceneNumber", 1)
@@ -596,7 +599,7 @@ def generate_image_endpoint(payload: Dict[str, Any] = Body(...)):
 
 
 # Grounded NotebookLM Chat Endpoint
-@app.post("/api/ai/notebooklm-chat")
+@app.post("/api/ai/notebooklm-chat", dependencies=[Depends(ai_limit), Depends(access.require_access)])
 def notebooklm_chat(payload: Dict[str, Any] = Body(...)):
     query = payload.get("query", "").strip()
     sources = payload.get("sources", [])
@@ -705,7 +708,7 @@ Grounding Rules:
     }
 
 # Grounded Story Generation Endpoint
-@app.post("/api/ai/story-generate")
+@app.post("/api/ai/story-generate", dependencies=[Depends(ai_limit), Depends(access.require_access)])
 def generate_story(payload: Dict[str, Any] = Body(...)):
     theme = payload.get("theme", "Neo-Tokyo 2099 Cyberpunk")
     archetype = payload.get("archetype", "Cyber Detective")
@@ -797,7 +800,7 @@ Respond ONLY with valid JSON in this exact structure without markdown backticks:
             print(f"[Story Generation Parse Error]: {e}")
 
     # Fallback to curated template with Indian hero presets
-    hero_name = "Aarav Sharma" if "detective" in archetype.lower() or "coder" in archetype.lower() else "Ananya Patel"
+    hero_name = "Kai Rivera" if "detective" in archetype.lower() or "coder" in archetype.lower() else "Mira Patel"
     return {
         "status": "success",
         "source": "curated-template",
@@ -805,8 +808,8 @@ Respond ONLY with valid JSON in this exact structure without markdown backticks:
             "name": hero_name,
             "archetype": archetype,
             "flaw": "Tends to jump straight into hacking before checking the security drones!",
-            "voice": "Determined, inventive, carries an ATL innovation toolkit.",
-            "visualSilhouette": f"Sleek solar hazard suit with ISRO patch, glowing holographic scanner tablet, smart specs in {theme}."
+            "voice": "Determined, inventive, carries an innovation toolkit.",
+            "visualSilhouette": f"Sleek solar hazard suit with a mission patch, glowing holographic scanner tablet, smart specs in {theme}."
         },
         "scenes": [
             {
@@ -851,7 +854,7 @@ class TrainerChatRequest(BaseModel):
     heroContext: Optional[Dict[str, Any]] = None
     apiKey: Optional[str] = None
 
-@app.post("/api/ai/trainer-chat")
+@app.post("/api/ai/trainer-chat", dependencies=[Depends(ai_limit), Depends(access.require_access)])
 async def trainer_chat(req: TrainerChatRequest):
     """
     Dedicated AI Mentor / Trainer endpoint for Cognitive Academy LMS.
@@ -910,8 +913,8 @@ Your mentoring guidelines:
         "status": "success",
         "trainer": {
             "name": "AI Studio Mentor",
-            "title": "Senior AI Creative Lead & Studio Evaluator",
-            "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+            "title": "AI guide for your project",
+            "avatar": "",
             "status": "Online & Mentoring 🟢"
         },
         "reply": mentor_reply,
@@ -919,20 +922,16 @@ Your mentoring guidelines:
     }
 
 # ==============================================================================
-# RAZORPAY PAYMENT GATEWAY INTEGRATION
+# PROGRAMMES (no online payments: fees are shared on enquiry)
 # ==============================================================================
 
-# Public pricing plans
-PRICING_PLANS = [
+PROGRAMMES = [
     {
         "id": "cohort-24h",
         "name": "Creator Cohort",
         "badge": "Most Popular · Weekends",
         "duration": "24 Hours · 2 Months",
         "schedule": "Weekends (Sat & Sun, 1.5 hrs/day)",
-        "price": 4999,
-        "originalPrice": 9999,
-        "currency": "INR",
         "description": "Comprehensive weekend masterclass for young creators (12+) building real AI projects in collaborative cohorts.",
         "features": [
             "24 Hours Live Weekend Sessions over 2 Months",
@@ -940,10 +939,10 @@ PRICING_PLANS = [
             "5 Real Deliverables: Script, Research, Art, Trailer, Website",
             "Live Peer Collaboration & Demo Day Premiere",
             "100-Point Rubric Mentor Evaluation",
-            "Verified ATL & Kreomax Creator Credential"
+            "Kreomax Creator Certificate"
         ],
         "popular": True,
-        "cta": "Enroll in Creator Cohort"
+        "cta": "Apply for Creator Cohort"
     },
     {
         "id": "training-1on1-30h",
@@ -951,9 +950,6 @@ PRICING_PLANS = [
         "badge": "Elite Track · Dedicated Mentor",
         "duration": "30 Hours Personalized",
         "schedule": "Flexible 1:1 Schedule (Weekdays / Weekends)",
-        "price": 14999,
-        "originalPrice": 24999,
-        "currency": "INR",
         "description": "Personalized 1-on-1 private mentoring with an AI specialist customized to student's pace and creative ambition.",
         "features": [
             "30 Hours of Dedicated 1-on-1 Private Sessions",
@@ -964,23 +960,35 @@ PRICING_PLANS = [
             "Letter of Recommendation + Certified Creator Credential"
         ],
         "popular": False,
-        "cta": "Book 1:1 Creator Mentorship"
+        "cta": "Ask about 1:1 Mentorship"
     }
 ]
 
-PAYMENT_TRANSACTIONS = []
-ADMISSION_APPLICATIONS = []
+LEADS_PATH = os.environ.get("LEADS_FILE") or os.path.join(os.path.dirname(__file__), "leads_data.json")
+
+
+def _load_leads() -> list:
+    """Reload previously saved leads so a restart never discards them."""
+    try:
+        with open(LEADS_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            return data if isinstance(data, list) else []
+    except (OSError, ValueError):
+        return []
+
+
+ADMISSION_APPLICATIONS = _load_leads()
 
 class AdmissionApplicationRequest(BaseModel):
-    planId: str
-    planName: Optional[str] = "Creator Cohort"
-    studentName: str
-    studentEmail: str
-    studentPhone: str
-    studentGrade: Optional[str] = "Grade 8-12"
-    notes: Optional[str] = ""
+    planId: str = Field(max_length=64)
+    planName: Optional[str] = Field(default="Creator Cohort", max_length=120)
+    studentName: str = Field(min_length=2, max_length=100)
+    studentEmail: str = Field(pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$", max_length=200)
+    studentPhone: str = Field(pattern=r"^[+0-9\s-]{7,16}$")
+    studentGrade: Optional[str] = Field(default="Grade 8-12", max_length=40)
+    notes: Optional[str] = Field(default="", max_length=1000)
 
-@app.post("/api/admissions/apply")
+@app.post("/api/admissions/apply", dependencies=[Depends(form_limit)])
 async def submit_admission_application(req: AdmissionApplicationRequest):
     """
     Records student pre-registration / admission application.
@@ -1003,8 +1011,7 @@ async def submit_admission_application(req: AdmissionApplicationRequest):
 
     # Save to leads_data.json
     try:
-        leads_path = os.path.join(os.path.dirname(__file__), "leads_data.json")
-        with open(leads_path, "w", encoding="utf-8") as f:
+        with open(LEADS_PATH, "w", encoding="utf-8") as f:
             json.dump(ADMISSION_APPLICATIONS, f, indent=2)
     except Exception as e:
         print(f"[Lead Persistence Notice]: {e}")
@@ -1025,7 +1032,7 @@ async def submit_admission_application(req: AdmissionApplicationRequest):
         "record": record
     }
 
-@app.get("/api/admissions/list")
+@app.get("/api/admissions/list", dependencies=[Depends(require_admin)])
 async def list_admission_applications():
     return {
         "status": "success",
@@ -1033,7 +1040,7 @@ async def list_admission_applications():
         "applications": ADMISSION_APPLICATIONS
     }
 
-@app.get("/api/admissions/test-email")
+@app.get("/api/admissions/test-email", dependencies=[Depends(require_admin)])
 async def test_email_delivery():
     """Diagnostic endpoint to test email delivery."""
     test_record = {
@@ -1056,164 +1063,62 @@ async def test_email_delivery():
         "lastError": LAST_EMAIL_ERROR
     }
 
-class CreateOrderRequest(BaseModel):
-    planId: str
-    amount: Optional[int] = None
-    customerName: Optional[str] = "Student Creator"
-    customerEmail: Optional[str] = "creator@kreomax.ai"
-    customerPhone: Optional[str] = "9876543210"
+# ==============================================================================
+# STUDIO ACCESS (codes the admin sends to approved students)
+# ==============================================================================
 
-class VerifyPaymentRequest(BaseModel):
-    razorpay_order_id: str
-    razorpay_payment_id: str
-    razorpay_signature: Optional[str] = None
-    planId: str
-    customerEmail: Optional[str] = None
-    customerName: Optional[str] = None
+class AccessCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+    phone: str = Field(default="", max_length=20)
+    applicationId: Optional[str] = Field(default=None, max_length=40)
+    note: str = Field(default="", max_length=300)
 
-@app.get("/api/payment/config")
-async def get_payment_config():
-    """
-    Returns Razorpay configuration and public API key.
-    Never exposes the RAZORPAY_KEY_SECRET!
-    """
-    key_id = os.environ.get("RAZORPAY_KEY_ID", "").strip()
+
+class AccessVerify(BaseModel):
+    code: str = Field(min_length=1, max_length=20)
+
+
+@app.post("/api/access/verify", dependencies=[Depends(access_limit)])
+async def verify_access(req: AccessVerify):
+    """Checks a student's access code. Deliberately gives the same answer for unknown and switched-off codes."""
+    rec = access.verify(req.code)
+    if not rec:
+        raise HTTPException(status_code=401, detail="That code is not valid. Check it and try again.")
+    return {"status": "success", "name": rec["name"], "display": rec["display"]}
+
+
+@app.get("/api/admin/access", dependencies=[Depends(require_admin)])
+async def admin_list_access():
+    return {"status": "success", "access": access.list_records()}
+
+
+@app.post("/api/admin/access", dependencies=[Depends(require_admin)])
+async def admin_create_access(req: AccessCreate):
+    return {"status": "success", "access": access.create(req.name, req.phone, req.applicationId, req.note)}
+
+
+@app.post("/api/admin/access/{code}/revoke", dependencies=[Depends(require_admin)])
+async def admin_revoke_access(code: str):
+    rec = access.set_status(code, "revoked")
+    if not rec:
+        raise HTTPException(status_code=404, detail="Code not found.")
+    return {"status": "success", "access": rec}
+
+
+@app.post("/api/admin/access/{code}/restore", dependencies=[Depends(require_admin)])
+async def admin_restore_access(code: str):
+    rec = access.set_status(code, "active")
+    if not rec:
+        raise HTTPException(status_code=404, detail="Code not found.")
+    return {"status": "success", "access": rec}
+
+@app.get("/api/public/config")
+async def get_public_config():
+    """Public, non-secret settings the website needs: the programme list and the enquiry-form key."""
     return {
         "status": "success",
-        "razorpayKeyId": key_id if key_id else "rzp_test_kreomax_sandbox",
-        "currency": "INR",
-        "isLiveKey": bool(key_id and key_id.startswith("rzp_live")),
-        "isTestKey": bool(key_id and key_id.startswith("rzp_test")),
-        "isConfigured": bool(key_id),
-        "plans": PRICING_PLANS,
+        "plans": PROGRAMMES,
         "web3formsKey": os.environ.get("WEB3FORMS_ACCESS_KEY", "").strip()
-    }
-
-@app.post("/api/payment/create-order")
-async def create_payment_order(req: CreateOrderRequest):
-    """
-    Creates a Razorpay Order ID.
-    If RAZORPAY_KEY_ID & RAZORPAY_KEY_SECRET are set in .env, calls Razorpay's live/test REST API.
-    If keys are absent, creates a simulated order so user testing works immediately without blockers.
-    """
-    plan = next((p for p in PRICING_PLANS if p["id"] == req.planId), PRICING_PLANS[1])
-    amount_in_rupees = req.amount if req.amount else plan["price"]
-    amount_in_paise = amount_in_rupees * 100
-
-    key_id = os.environ.get("RAZORPAY_KEY_ID", "").strip()
-    key_secret = os.environ.get("RAZORPAY_KEY_SECRET", "").strip()
-
-    receipt_id = f"rcpt_{int(time.time())}_{uuid.uuid4().hex[:4]}"
-
-    # If valid Razorpay keys exist, call Razorpay Orders API
-    if key_id and key_secret:
-        try:
-            url = "https://api.razorpay.com/v1/orders"
-            payload = json.dumps({
-                "amount": amount_in_paise,
-                "currency": "INR",
-                "receipt": receipt_id,
-                "notes": {
-                    "planId": plan["id"],
-                    "planName": plan["name"],
-                    "customerEmail": req.customerEmail or "creator@kreomax.ai"
-                }
-            }).encode("utf-8")
-
-            auth_str = f"{key_id}:{key_secret}"
-            auth_b64 = base64.b64encode(auth_str.encode("utf-8")).decode("utf-8")
-
-            request = urllib.request.Request(url, data=payload, headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Basic {auth_b64}"
-            })
-
-            with urllib.request.urlopen(request, timeout=10) as response:
-                rzp_order = json.loads(response.read().decode("utf-8"))
-                return {
-                    "status": "success",
-                    "orderId": rzp_order.get("id"),
-                    "amount": rzp_order.get("amount"),
-                    "currency": rzp_order.get("currency", "INR"),
-                    "keyId": key_id,
-                    "plan": plan,
-                    "isSimulated": False
-                }
-        except Exception as e:
-            print(f"[Razorpay API Error, falling back to sandbox]: {e}")
-            # Fall through to sandbox fallback so app doesn't crash on invalid keys
-
-    # Sandbox / Demo order generation
-    mock_order_id = f"order_test_{int(time.time())}_{uuid.uuid4().hex[:6]}"
-    return {
-        "status": "success",
-        "orderId": mock_order_id,
-        "amount": amount_in_paise,
-        "currency": "INR",
-        "keyId": key_id if key_id else "rzp_test_kreomax_sandbox",
-        "plan": plan,
-        "isSimulated": not (key_id and key_secret),
-        "note": "Running in test sandbox mode. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env for production payments."
-    }
-
-@app.post("/api/payment/verify")
-async def verify_payment(req: VerifyPaymentRequest):
-    """
-    Verifies Razorpay payment signature using HMAC-SHA256.
-    Unlocks full creator privileges upon successful verification.
-    """
-    key_secret = os.environ.get("RAZORPAY_KEY_SECRET", "").strip()
-    is_simulated = req.razorpay_order_id.startswith("order_test_") or not key_secret
-
-    verified = False
-    if is_simulated:
-        verified = True
-    else:
-        if req.razorpay_signature:
-            message = f"{req.razorpay_order_id}|{req.razorpay_payment_id}"
-            generated_sign = hmac.new(
-                key_secret.encode("utf-8"),
-                message.encode("utf-8"),
-                hashlib.sha256
-            ).hexdigest()
-            verified = hmac.compare_digest(generated_sign, req.razorpay_signature)
-
-    if not verified:
-        raise HTTPException(status_code=400, detail="Invalid payment signature verification failed.")
-
-    tx_record = {
-        "transactionId": req.razorpay_payment_id,
-        "orderId": req.razorpay_order_id,
-        "planId": req.planId,
-        "customerEmail": req.customerEmail or LEARNER_PROFILE.get("email"),
-        "customerName": req.customerName or LEARNER_PROFILE.get("name"),
-        "timestamp": int(time.time()),
-        "status": "paid",
-        "isSimulated": is_simulated
-    }
-    PAYMENT_TRANSACTIONS.append(tx_record)
-
-    # Upgrade learner profile
-    LEARNER_PROFILE["enrolledPlan"] = req.planId
-    LEARNER_PROFILE["enrolledAt"] = int(time.time())
-
-    return {
-        "status": "success",
-        "verified": True,
-        "transactionId": req.razorpay_payment_id,
-        "orderId": req.razorpay_order_id,
-        "planId": req.planId,
-        "isSimulated": is_simulated,
-        "message": f"Payment successfully verified! Plan '{req.planId}' is active."
-    }
-
-@app.get("/api/payment/transactions")
-async def get_payment_transactions():
-    """Returns recorded payment transactions."""
-    return {
-        "status": "success",
-        "count": len(PAYMENT_TRANSACTIONS),
-        "transactions": PAYMENT_TRANSACTIONS
     }
 
 if __name__ == "__main__":
